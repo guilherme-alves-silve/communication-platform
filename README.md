@@ -9,6 +9,7 @@
 * [PostgreSQL](https://www.postgresql.org/)
 * [Lombok](https://projectlombok.org/)
 * [Docker](https://www.docker.com/)
+* [Google Guice](https://github.com/google/guice/)
 
 ## Tecnologias utilizadas nos testes
 * [Testcontainers](https://www.testcontainers.org/)
@@ -35,6 +36,11 @@ http://localhost:8080/swagger-ui
 ```
 
 ## Empacotar e executar a aplicação
+
+Executar o docker-compose na raiz do projeto:
+```
+docker-compose up
+```
 
 Executar os testes:
 ```
