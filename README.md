@@ -58,3 +58,8 @@ Executar a aplicação:
 * [Eclipse](https://www.eclipse.org/community/eclipse_newsletter/2017/june/article1.php)
 * [NetBeans](https://netbeans.apache.org/kb/docs/java/debug-visual_pt_BR.html)
 * [VSCode](https://code.visualstudio.com/docs/java/java-debugging)
+
+## Roadmap
+
+* [Adicionar autenticação e autorização](https://vertx.io/blog/jwt-authorization-for-vert-x-with-keycloak/)
+* [Substituir o vertx.serTimeout por NOTIFY do Redis ou mecanismo de fila](https://medium.com/nerd-for-tech/redis-getting-notified-when-a-key-is-expired-or-changed-ca3e1f1c7f0a)
