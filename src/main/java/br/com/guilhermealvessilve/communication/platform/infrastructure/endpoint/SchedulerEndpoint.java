@@ -118,7 +118,7 @@ public class SchedulerEndpoint {
                 }
 
                 ctx.response()
-                    .setStatusCode(HTTP_ACCEPTED)
+                    .setStatusCode(HTTP_CREATED)
                     .end(jsonComponent.toJson(asyncResult.result().orElseThrow()));
             });
     }

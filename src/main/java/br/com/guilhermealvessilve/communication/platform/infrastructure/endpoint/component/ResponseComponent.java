@@ -11,8 +11,7 @@ import java.text.MessageFormat;
 
 import static br.com.guilhermealvessilve.communication.platform.infrastructure.component.ErrorMessageComponent.*;
 import static br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.exception.dto.ErrorsDto.withError;
-import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
-import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
+import static java.net.HttpURLConnection.*;
 
 public class ResponseComponent {
 
@@ -31,6 +30,7 @@ public class ResponseComponent {
             if (asyncResult.cause() instanceof ErrorViolationException) {
                 final var violation = (ErrorViolationException) asyncResult.cause();
                 ctx.response()
+                    .setStatusCode(HTTP_BAD_REQUEST)
                     .end(jsonComponent.toJson(violation.getErrors()));
                 return true;
             }
