@@ -1,12 +1,14 @@
 # Projeto - Communication Platform
 
-Nesse projeto foi utilizado o Vert.x por ser um framework enxuto
+Nesse projeto foi utilizado o Vert.x por ser uma ferramenta enxuta
 e não [opinável](https://vertx.io/) (ver na página sobre flexibilidade),
-amplo, suportado pelo Eclipse Foundation. Outra vantagem desse framework, e sua simplicidade,
+é amplo, suportado pelo [Eclipse Foundation](https://projects.eclipse.org/projects/rt.vertx).
+Outra vantagem dessa ferramenta, é sua simplicidade,
 no quesito de não ter muitas dependências externas, e ser extremamente favoravel,
 ao uso de maneira otimizada dos recursos da maquina, tendo sua implementação no núcleo,
 o [multi-reactor pattern](https://vertx.io/docs/vertx-core/java/),
-diferente do reactor pattern comum, utilizado normalmente pelo node.js.
+diferente do reactor pattern comum, utilizado normalmente pelo [node.js](https://nodejs.org/en/).
+O Vert.x é utilizado também pelo framework [Quarkus](https://quarkus.io/guides/vertx).
 
 ## Arquitetura do projeto
 
@@ -47,12 +49,6 @@ não bloqueante e assíncrona.
 * POST: /scheduler/
 * GET: /scheduler/status/{id}
 * DELETE: /scheduler/{id}
-
-## Swagger
-
-```
-http://localhost:8080/swagger-ui
-```
 
 ## Empacotar e executar a aplicação
 
