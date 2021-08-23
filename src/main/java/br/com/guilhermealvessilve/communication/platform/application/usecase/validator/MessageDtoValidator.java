@@ -1,16 +1,17 @@
 package br.com.guilhermealvessilve.communication.platform.application.usecase.validator;
 
 import br.com.guilhermealvessilve.communication.platform.application.usecase.dto.RequestMessageDto;
-import br.com.guilhermealvessilve.communication.platform.shared.dependency.InjectionModules;
-import br.com.guilhermealvessilve.communication.platform.shared.exception.dto.ErrorDto;
-import br.com.guilhermealvessilve.communication.platform.shared.exception.dto.ErrorsDto;
-import br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages;
-import br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus;
+import br.com.guilhermealvessilve.communication.platform.configuration.dependency.InjectionModules;
+import br.com.guilhermealvessilve.communication.platform.configuration.exception.dto.ErrorDto;
+import br.com.guilhermealvessilve.communication.platform.configuration.exception.dto.ErrorsDto;
+import br.com.guilhermealvessilve.communication.platform.configuration.util.ErrorMessages;
 import com.google.inject.Singleton;
 import jakarta.validation.Validator;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 
 import java.util.stream.Collectors;
+
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 
 @Singleton
 public class MessageDtoValidator {
@@ -21,7 +22,7 @@ public class MessageDtoValidator {
         final var constraints = validator.validate(request);
         final var errors = constraints.stream()
             .map(violation -> ErrorDto.withError(
-                HttpStatus.BAD_REQUEST,
+                HTTP_BAD_REQUEST,
                 ErrorMessages.INVALID_PARAMETER_CODE,
                 String.format("%s - %s", ((PathImpl) violation.getPropertyPath()).getLeafNode().getName(), violation.getMessage())
             ))

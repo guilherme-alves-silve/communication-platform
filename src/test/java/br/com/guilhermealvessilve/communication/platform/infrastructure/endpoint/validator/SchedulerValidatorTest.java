@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus.BAD_REQUEST;
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -29,7 +29,7 @@ class SchedulerValidatorTest {
         final var result = validator.validate("invalid uuid", mockResponse);
         assertAll(
             () -> assertThat(result).isFalse(),
-            () -> verify(mockResponse).setStatusCode(eq(BAD_REQUEST))
+            () -> verify(mockResponse).setStatusCode(eq(HTTP_BAD_REQUEST))
         );
     }
 

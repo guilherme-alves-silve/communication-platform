@@ -1,6 +1,6 @@
 package br.com.guilhermealvessilve.communication.platform.infrastructure.database.migration;
 
-import br.com.guilhermealvessilve.communication.platform.infrastructure.util.CommunicationPlatformConfiguration;
+import br.com.guilhermealvessilve.communication.platform.domain.CommunicationPlatformConfiguration;
 
 public class MigrationManager {
 

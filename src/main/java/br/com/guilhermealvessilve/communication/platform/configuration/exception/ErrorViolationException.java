@@ -1,6 +1,6 @@
-package br.com.guilhermealvessilve.communication.platform.shared.exception;
+package br.com.guilhermealvessilve.communication.platform.configuration.exception;
 
-import br.com.guilhermealvessilve.communication.platform.shared.exception.dto.ErrorsDto;
+import br.com.guilhermealvessilve.communication.platform.configuration.exception.dto.ErrorsDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

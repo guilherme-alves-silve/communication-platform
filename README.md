@@ -1,5 +1,24 @@
 # Projeto - Communication Platform
 
+Nesse projeto foi utilizado o Vert.x por ser um framework enxuto
+e não [opinável](https://vertx.io/) (ver na página sobre flexibilidade),
+amplo, suportado pelo Eclipse Foundation. Outra vantagem desse framework, e sua simplicidade,
+no quesito de não ter muitas dependências externas, e ser extremamente favoravel,
+ao uso de maneira otimizada dos recursos da maquina, tendo sua implementação no núcleo,
+o [multi-reactor pattern](https://vertx.io/docs/vertx-core/java/),
+diferente do reactor pattern comum, utilizado normalmente pelo node.js.
+
+## Arquitetura do projeto
+
+Segue um modelo parecido ao Clean-Architecture, aonde as regras de negócio são separadas da parte
+de implementação arquitetural. Sendo dividido em:
+
+* application: Porta de entrada dos dados e saída, nesse caso, ele não é acoplado com o framework.
+O framework, console ou UI, que realizam a chamada a esse módulo.
+* domain: aonde contém a base das regras de negócio, como repository, service se necessário e as entidades.
+* instrastructure: contém de fato o framework, nesse caso, sendo um servidor HTTP implementado com programação
+não bloqueante e assíncrona.
+
 ## Ambiente para execução
 * [Java 11+](http://openjdk.java.net/projects/jdk/11/)
 * [Docker](https://www.docker.com/)

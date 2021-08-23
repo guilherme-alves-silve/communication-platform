@@ -1,6 +1,6 @@
 package br.com.guilhermealvessilve.communication.platform.infrastructure.database;
 
-import br.com.guilhermealvessilve.communication.platform.infrastructure.util.CommunicationPlatformConfiguration;
+import br.com.guilhermealvessilve.communication.platform.domain.CommunicationPlatformConfiguration;
 import io.vertx.core.Vertx;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.PgPool;
