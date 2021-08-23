@@ -203,6 +203,8 @@
  */
 package br.com.guilhermealvessilve.communication.platform.application.usecase.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -214,7 +216,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import java.time.Instant;
 
 @Getter
-@RequiredArgsConstructor
 public class RequestMessageDto {
 
     @NotNull
@@ -232,6 +233,19 @@ public class RequestMessageDto {
 
     @NotNull
     private final Type type;
+
+    @JsonCreator
+    public RequestMessageDto(@JsonProperty("scheduleTime") Instant scheduleTime,
+                             @JsonProperty("from") String from,
+                             @JsonProperty("to") String to,
+                             @JsonProperty("message") String message,
+                             @JsonProperty("type") Type type) {
+        this.scheduleTime = scheduleTime;
+        this.from = from;
+        this.to = to;
+        this.message = message;
+        this.type = type;
+    }
 
     @Override
     public String toString() {

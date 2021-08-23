@@ -1,7 +1,7 @@
 package br.com.guilhermealvessilve.communication.platform.application.usecase.validator;
 
 import br.com.guilhermealvessilve.communication.platform.application.usecase.dto.RequestMessageDto;
-import br.com.guilhermealvessilve.communication.platform.dependency.InjectionModules;
+import br.com.guilhermealvessilve.communication.platform.shared.dependency.InjectionModules;
 import br.com.guilhermealvessilve.communication.platform.shared.exception.dto.ErrorDto;
 import br.com.guilhermealvessilve.communication.platform.shared.exception.dto.ErrorsDto;
 import br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages;

@@ -201,23 +201,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.guilhermealvessilve.communication.platform.dependency;
+package br.com.guilhermealvessilve.communication.platform.shared.dependency;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import lombok.experimental.UtilityClass;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.database.migration.MigrationManager;
+import com.google.inject.AbstractModule;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
-/**
- * Injector é thread-safe.
- * Referência:
- *  https://groups.google.com/g/google-guice/c/DfT0eHtYK1Y?pli=1
- */
-@UtilityClass
-public class InjectionModules {
+class VertxModule extends AbstractModule {
 
-    private static final Injector VERTX_INJECTOR = Guice.createInjector(new VertxModule());
+    private static final ValidatorFactory FACTORY = Validation.buildDefaultValidatorFactory();
 
-    public static <T> T getInstance(Class<T> clazz) {
-        return VERTX_INJECTOR.getInstance(clazz);
+    @Override
+    protected void configure() {
+        bind(Validator.class).toProvider(FACTORY::getValidator);
+        bind(MigrationManager.class).toInstance(new MigrationManager());
     }
 }

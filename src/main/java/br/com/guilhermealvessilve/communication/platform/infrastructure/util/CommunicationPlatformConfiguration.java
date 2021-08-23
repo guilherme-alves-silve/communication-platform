@@ -259,10 +259,10 @@ public class CommunicationPlatformConfiguration {
 
     private InputStream getResourceAsStream() {
         var input = this.getClass().getClassLoader()
-            .getResourceAsStream("/application.properties");
+            .getResourceAsStream("application.properties");
 
         if (null == input) {
-            input = this.getClass().getResourceAsStream("application.properties");
+            input = this.getClass().getResourceAsStream("/application.properties");
         }
 
         return Objects.requireNonNull(input, "application.properties must exists!");

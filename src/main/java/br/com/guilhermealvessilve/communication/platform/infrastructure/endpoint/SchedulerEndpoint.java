@@ -203,14 +203,24 @@
  */
 package br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint;
 
+import br.com.guilhermealvessilve.communication.platform.application.converter.MessageDtoToEntityConverter;
 import br.com.guilhermealvessilve.communication.platform.application.usecase.CreateScheduledMessageUseCase;
-import br.com.guilhermealvessilve.communication.platform.dependency.InjectionModules;
+import br.com.guilhermealvessilve.communication.platform.application.usecase.dto.RequestMessageDto;
+import br.com.guilhermealvessilve.communication.platform.application.usecase.validator.MessageDtoValidator;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.database.ConnectionPool;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.util.Responses;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator.SchedulerValidator;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator.Validators;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.repository.MessageRepositoryImpl;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.util.Jsons;
+import br.com.guilhermealvessilve.communication.platform.shared.dependency.InjectionModules;
+import br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.sqlclient.SqlClient;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -218,9 +228,6 @@ import lombok.extern.log4j.Log4j2;
 
 import java.util.UUID;
 
-import static br.com.guilhermealvessilve.communication.platform.shared.exception.dto.ErrorsDto.withError;
-import static br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages.INTERNAL_SERVER_ERROR_CODE;
-import static br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus.INTERNAL_SERVER_ERROR;
 import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.Jsons.toJson;
 
 @Log4j2
@@ -230,10 +237,12 @@ public class SchedulerEndpoint {
     private final Vertx vertx;
     private final Router router;
     private final SchedulerValidator validator;
+    private final SqlClient client;
 
     public static void configureEndpoint(@NonNull final Vertx vertx, @NonNull final Router router) {
         final var validator = new SchedulerValidator();
-        final var endpoint = new SchedulerEndpoint(vertx, router, validator);
+        final var client = ConnectionPool.getClient(vertx);
+        final var endpoint = new SchedulerEndpoint(vertx, router, validator, client);
         endpoint.configure();
     }
 
@@ -241,19 +250,20 @@ public class SchedulerEndpoint {
         router.route(HttpMethod.GET, "/scheduler/:id")
             .produces("application/json")
             .handler(this::handleGet)
-            .failureHandler(this::handleFailure);
+            .failureHandler(Responses::handleFailure);
 
         router.route(HttpMethod.POST, "/scheduler")
             .consumes("application/json")
             .produces("application/json")
             .handler(Validators.bodyRequiredHandler(vertx))
+            .handler(BodyHandler.create())
             .handler(this::handlePost)
-            .failureHandler(this::handleFailure);
+            .failureHandler(Responses::handleFailure);
 
         router.route(HttpMethod.DELETE, "/scheduler/:id")
             .consumes("application/json")
             .handler(this::handleDelete)
-            .failureHandler(this::handleFailure);
+            .failureHandler(Responses::handleFailure);
     }
 
     private void handleGet(final RoutingContext ctx) {
@@ -276,21 +286,28 @@ public class SchedulerEndpoint {
     }
 
     private void handlePost(final RoutingContext ctx) {
+        final var body = ctx.getBodyAsString();
+        final var createUseCase = new CreateScheduledMessageUseCase(
+            InjectionModules.getInstance(MessageDtoToEntityConverter.class),
+            new MessageRepositoryImpl(client),
+            InjectionModules.getInstance(MessageDtoValidator.class)
+        );
 
-        final var createUseCase = InjectionModules.getInstance(CreateScheduledMessageUseCase.class);
-        ctx.request()
-            .body();
+        final var request = Jsons.fromJson(body, RequestMessageDto.class);
+        createUseCase.create(request)
+            .onComplete(asyncResult -> {
 
-        //createUseCase.create(dto);
+                if (Responses.handleFailure(asyncResult, ctx)) {
+                    return;
+                }
+
+                ctx.response()
+                    .setStatusCode(HttpStatus.CREATED)
+                    .end(toJson(asyncResult.result().orElseThrow()));
+            });
     }
 
     private void handleDelete(final RoutingContext ctx) {
 
-    }
-
-    private void handleFailure(final RoutingContext ctx) {
-        ctx.response()
-            .setStatusCode(INTERNAL_SERVER_ERROR)
-            .end(toJson(withError(INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR_CODE)));
     }
 }
