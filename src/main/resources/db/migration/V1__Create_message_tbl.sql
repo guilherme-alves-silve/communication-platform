@@ -5,7 +5,8 @@ CREATE TABLE message_tbl (
     to_destination VARCHAR(255) NOT NULL,
     type VARCHAR(50) NOT NULL,
     message TEXT NOT NULL,
-    sent BOOLEAN DEFAULT FALSE
+    sent BOOLEAN DEFAULT FALSE,
+    active BOOLEAN DEFAULT TRUE
 );
 
 CREATE INDEX idx_message_tbl_schedule_time ON message_tbl(schedule_time);

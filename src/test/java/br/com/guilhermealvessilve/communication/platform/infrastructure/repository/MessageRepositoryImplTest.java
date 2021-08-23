@@ -7,8 +7,7 @@ import br.com.guilhermealvessilve.communication.platform.test.specific.SQLTestHe
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.time.LocalDateTime;
@@ -17,6 +16,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(VertxExtension.class)
 @ExtendWith(PostgreSQLTestcontainersExtension.class)
 class MessageRepositoryImplTest {
@@ -27,6 +27,7 @@ class MessageRepositoryImplTest {
     }
 
     @Test
+    @Order(1)
     void shouldFindMessage(final Vertx vertx, final VertxTestContext testContext) {
 
         final var expectedUUID = UUID.fromString("3308b0da-7e11-43aa-a88c-59a1366c057e");
@@ -51,6 +52,25 @@ class MessageRepositoryImplTest {
     }
 
     @Test
+    @Order(2)
+    void shouldDeleteMessage(final Vertx vertx, final VertxTestContext testContext) {
+
+        final var uuidDelete = UUID.fromString("1ad9b240-c417-4ae4-bfc4-6f169bdf9a85");
+
+        final var pool = PostgreSQLTestcontainersExtension.getTestcontainersPool(vertx);
+        pool.withTransaction(conn -> {
+            final var repository = new MessageRepositoryImpl(conn);
+            return repository.deleteById(uuidDelete);
+        })
+        .onSuccess(result -> {
+            assertThat(result).isTrue();
+            testContext.completeNow();
+        })
+        .onComplete(testContext.succeedingThenComplete());
+    }
+
+    @Test
+    @Order(3)
     void shouldFindAllScheduledMessages(final Vertx vertx, final VertxTestContext testContext) {
 
         final var past = LocalDateTime.now().minusDays(1);
@@ -75,6 +95,7 @@ class MessageRepositoryImplTest {
     }
 
     @Test
+    @Order(4)
     void shouldSaveMessage(final Vertx vertx, final VertxTestContext testContext) {
 
         final var messageEntity = MessageEntityFixture.fixtureMessageEntity("wesley@gmail.com", "nappa@hotmail.com");

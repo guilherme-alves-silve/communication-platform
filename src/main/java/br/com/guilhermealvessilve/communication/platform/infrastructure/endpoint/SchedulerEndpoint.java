@@ -204,6 +204,7 @@
 package br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint;
 
 import br.com.guilhermealvessilve.communication.platform.application.usecase.CreateScheduledMessageUseCase;
+import br.com.guilhermealvessilve.communication.platform.application.usecase.DeleteScheduledMessageUseCase;
 import br.com.guilhermealvessilve.communication.platform.application.usecase.FindScheduledMessageUseCase;
 import br.com.guilhermealvessilve.communication.platform.application.usecase.dto.RequestMessageDto;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.database.ConnectionPool;
@@ -211,7 +212,6 @@ import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint
 import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator.SchedulerValidator;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator.Validators;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.util.Jsons;
-import br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
@@ -230,7 +230,7 @@ import static br.com.guilhermealvessilve.communication.platform.infrastructure.u
 import static br.com.guilhermealvessilve.communication.platform.shared.exception.dto.ErrorsDto.withError;
 import static br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages.NOT_FOUND_CODE;
 import static br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages.getMessage;
-import static br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus.NOT_FOUND;
+import static br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus.*;
 
 @Log4j2
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -269,16 +269,12 @@ public class SchedulerEndpoint {
     }
 
     private void handleGet(final RoutingContext ctx) {
-        final var address = ctx.request()
-            .connection()
-            .remoteAddress()
-            .toString();
+
+        logInput(ctx);
 
         final var id = ctx.pathParam("id");
-        LOGGER.info("Request from address {} with id {}", address, id);
 
-        final var response = ctx.response();
-        if (!validator.validate(id, response)) {
+        if (!validator.validate(id, ctx.response())) {
             return;
         }
 
@@ -293,16 +289,12 @@ public class SchedulerEndpoint {
                 }
 
                 if (asyncResult.result().isEmpty()) {
-                    ctx.response()
-                        .end(toJson(withError(
-                            NOT_FOUND,
-                            NOT_FOUND_CODE,
-                            MessageFormat.format(getMessage(NOT_FOUND_CODE), uuid.toString())
-                        )));
+                    Responses.notFound(ctx, uuid.toString());
                     return;
                 }
 
                 ctx.response()
+                    .setStatusCode(OK)
                     .end(toJson(asyncResult.result().get()));
             });
     }
@@ -320,12 +312,48 @@ public class SchedulerEndpoint {
                 }
 
                 ctx.response()
-                    .setStatusCode(HttpStatus.CREATED)
+                    .setStatusCode(CREATED)
                     .end(toJson(asyncResult.result().orElseThrow()));
             });
     }
 
     private void handleDelete(final RoutingContext ctx) {
 
+        logInput(ctx);
+
+        final var id = ctx.pathParam("id");
+        if (!validator.validate(id, ctx.response())) {
+            return;
+        }
+
+        final var uuid = UUID.fromString(id);
+
+        final var findUseCase = DeleteScheduledMessageUseCase.getInstance(client);
+        findUseCase.deleteById(uuid)
+            .onComplete(asyncResult -> {
+
+                if (Responses.handleFailure(asyncResult, ctx)) {
+                    return;
+                }
+
+                if (!asyncResult.result()) {
+                    Responses.notFound(ctx, uuid.toString());
+                    return;
+                }
+
+                ctx.response()
+                    .setStatusCode(NO_CONTENT)
+                    .end();
+            });
+    }
+
+    private void logInput(final RoutingContext ctx) {
+        final var address = ctx.request()
+            .connection()
+            .remoteAddress()
+            .toString();
+
+        final var id = ctx.pathParam("id");
+        LOGGER.info("Request from address {} with id {}", address, id);
     }
 }

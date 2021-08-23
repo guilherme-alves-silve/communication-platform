@@ -234,7 +234,7 @@ public final class FindScheduledMessageUseCase {
     public static FindScheduledMessageUseCase getInstance(@NonNull final SqlClient client) {
         return new FindScheduledMessageUseCase(
             InjectionModules.getInstance(MessageDtoToEntityConverter.class),
-            new MessageRepositoryImpl(client)
+            MessageRepositoryImpl.getInstance(client)
         );
     }
 }

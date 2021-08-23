@@ -5,15 +5,19 @@ import io.vertx.core.AsyncResult;
 import io.vertx.ext.web.RoutingContext;
 import lombok.experimental.UtilityClass;
 
+import java.text.MessageFormat;
+
 import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.Jsons.toJson;
 import static br.com.guilhermealvessilve.communication.platform.shared.exception.dto.ErrorsDto.withError;
-import static br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages.INTERNAL_SERVER_ERROR_CODE;
+import static br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages.*;
+import static br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages.NOT_FOUND_CODE;
 import static br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus.INTERNAL_SERVER_ERROR;
+import static br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus.NOT_FOUND;
 
 @UtilityClass
 public class Responses {
 
-    public static <T> boolean handleFailure(AsyncResult<T> asyncResult, RoutingContext ctx) {
+    public static <T> boolean handleFailure(final AsyncResult<T> asyncResult, final RoutingContext ctx) {
         if (asyncResult.failed()) {
             if (asyncResult.cause() instanceof ErrorViolationException) {
                 final var violation = (ErrorViolationException) asyncResult.cause();
@@ -27,6 +31,15 @@ public class Responses {
         }
 
         return false;
+    }
+
+    public static void notFound(final RoutingContext ctx, final String id) {
+        ctx.response()
+            .end(toJson(withError(
+                NOT_FOUND,
+                NOT_FOUND_CODE,
+                MessageFormat.format(getMessage(NOT_FOUND_CODE), id)
+            )));
     }
 
     public static void handleFailure(final RoutingContext ctx) {

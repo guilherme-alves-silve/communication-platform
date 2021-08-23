@@ -219,4 +219,6 @@ public interface MessageRepository {
                                                              final int expectedCountElements);
 
     Future<Boolean> save(final MessageEntity message);
+
+    Future<Boolean> deleteById(final UUID id);
 }

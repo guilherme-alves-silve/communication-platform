@@ -8,7 +8,6 @@ import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.SqlClient;
 import io.vertx.sqlclient.Tuple;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
@@ -16,10 +15,13 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.*;
 
-@RequiredArgsConstructor
 public class MessageRepositoryImpl implements MessageRepository {
 
     private final SqlClient client;
+
+    MessageRepositoryImpl(@NonNull final SqlClient client) {
+        this.client = client;
+    }
 
     @Override
     public Future<Optional<MessageEntity>> findById(@NonNull final UUID id) {
@@ -63,7 +65,8 @@ public class MessageRepositoryImpl implements MessageRepository {
             "FROM message_tbl",
             "WHERE",
                 "schedule_time <= $1 AND",
-                "sent = FALSE",
+                "sent = FALSE AND",
+                "active = TRUE",
             "LIMIT $2;"
         ))
         .execute(Tuple.of(scheduledDateTime, expectedCountElements))
@@ -107,6 +110,17 @@ public class MessageRepositoryImpl implements MessageRepository {
         .map(rows -> rows.rowCount() == 1);
     }
 
+    @Override
+    public Future<Boolean> deleteById(@NonNull final UUID id) {
+        return client.preparedQuery(String.join(StringUtils.SPACE, StringUtils.EMPTY,
+            "UPDATE message_tbl",
+            "SET active = FALSE",
+            "WHERE id = $1;"
+        ))
+        .execute(Tuple.of(id))
+        .map(rows -> rows.rowCount() == 1);
+    }
+
     private MessageEntity getMessageEntity(Row row) {
         return new MessageEntity(
             row.getUUID("id"),
@@ -130,5 +144,9 @@ public class MessageRepositoryImpl implements MessageRepository {
         }
 
         return it.next();
+    }
+
+    public static MessageRepository getInstance(final SqlClient client) {
+        return new MessageRepositoryImpl(client);
     }
 }

@@ -251,10 +251,10 @@ public final class CreateScheduledMessageUseCase {
             });
     }
 
-    public static CreateScheduledMessageUseCase getInstance(SqlClient client) {
+    public static CreateScheduledMessageUseCase getInstance(final SqlClient client) {
         return new CreateScheduledMessageUseCase(
             InjectionModules.getInstance(MessageDtoToEntityConverter.class),
-            new MessageRepositoryImpl(client),
+            MessageRepositoryImpl.getInstance(client),
             InjectionModules.getInstance(MessageDtoValidator.class)
         );
     }
