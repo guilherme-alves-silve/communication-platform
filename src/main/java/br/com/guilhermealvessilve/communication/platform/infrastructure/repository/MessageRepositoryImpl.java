@@ -35,7 +35,9 @@ public class MessageRepositoryImpl implements MessageRepository {
                     ",sent",
                     ",message",
                 "FROM message_tbl",
-                "WHERE id = $1;"
+                "WHERE",
+                    "id = $1 AND",
+                    "active = TRUE;"
             ))
             .execute(Tuple.of(id))
             .map(rows -> {

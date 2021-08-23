@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(VertxExtension.class)
 @ExtendWith(PostgreSQLTestcontainersExtension.class)
-class MessageRepositoryImplTest {
+class MessageRepositoryImplIntegrationTest {
 
     @BeforeAll
     static void setupAll(final Vertx vertx, final VertxTestContext testContext) {
@@ -71,6 +71,24 @@ class MessageRepositoryImplTest {
 
     @Test
     @Order(3)
+    void shouldNotFindDeletedMessage(final Vertx vertx, final VertxTestContext testContext) {
+
+        final var expectedUUID = UUID.fromString("1ad9b240-c417-4ae4-bfc4-6f169bdf9a85");
+
+        final var pool = PostgreSQLTestcontainersExtension.getTestcontainersPool(vertx);
+        pool.withConnection(conn -> {
+            final var repository = new MessageRepositoryImpl(conn);
+            return repository.findById(expectedUUID);
+        })
+        .onSuccess(optional -> {
+            assertThat(optional).isEmpty();
+            testContext.completeNow();
+        })
+        .onComplete(testContext.succeedingThenComplete());
+    }
+
+    @Test
+    @Order(4)
     void shouldFindAllScheduledMessages(final Vertx vertx, final VertxTestContext testContext) {
 
         final var past = LocalDateTime.now().minusDays(1);
@@ -95,7 +113,7 @@ class MessageRepositoryImplTest {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     void shouldSaveMessage(final Vertx vertx, final VertxTestContext testContext) {
 
         final var messageEntity = MessageEntityFixture.fixtureMessageEntity("wesley@gmail.com", "nappa@hotmail.com");

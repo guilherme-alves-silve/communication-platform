@@ -223,13 +223,9 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-import java.text.MessageFormat;
 import java.util.UUID;
 
 import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.Jsons.toJson;
-import static br.com.guilhermealvessilve.communication.platform.shared.exception.dto.ErrorsDto.withError;
-import static br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages.NOT_FOUND_CODE;
-import static br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages.getMessage;
 import static br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus.*;
 
 @Log4j2
