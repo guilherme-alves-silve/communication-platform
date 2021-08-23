@@ -201,39 +201,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator;
+package br.com.guilhermealvessilve.communication.platform.application.usecase;
 
-import io.vertx.core.http.HttpServerResponse;
+import br.com.guilhermealvessilve.communication.platform.application.converter.MessageDtoToEntityConverter;
+import br.com.guilhermealvessilve.communication.platform.application.usecase.dto.RequestMessageDto;
+import br.com.guilhermealvessilve.communication.platform.application.usecase.dto.ResponseMessageDto;
+import br.com.guilhermealvessilve.communication.platform.application.usecase.validator.MessageDtoValidator;
+import br.com.guilhermealvessilve.communication.platform.domain.repository.MessageRepository;
+import br.com.guilhermealvessilve.communication.platform.shared.exception.ErrorViolationException;
+import com.google.inject.Singleton;
+import io.vertx.core.Future;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.BooleanUtils;
 
-import java.util.regex.Pattern;
+import java.util.Optional;
 
-import static br.com.guilhermealvessilve.communication.platform.shared.exception.dto.ErrorsDto.withError;
-import static br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages.INVALID_PARAMETER_CODE;
-import static br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus.BAD_REQUEST;
-import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.Jsons.toJson;
+@Singleton
+@RequiredArgsConstructor
+public final class CreateScheduledMessageUseCase {
 
-public class SchedulerValidator {
+    private final MessageDtoToEntityConverter converter;
+    private final MessageRepository repository;
+    private final MessageDtoValidator validator;
 
-    private static final Pattern UUID_PATTERN = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}");
+    public Future<Optional<ResponseMessageDto>> create(@NonNull final RequestMessageDto dto) {
 
-    public boolean validateUUID(final String uuid, final HttpServerResponse response) {
-
-        if (isValid(uuid)) {
-            return true;
+        final var errors = validator.validate(dto);
+        if (errors.hasError()) {
+            return Future.failedFuture(new ErrorViolationException(errors));
         }
 
-        response.setStatusCode(BAD_REQUEST)
-            .end(toJson(withError(BAD_REQUEST, INVALID_PARAMETER_CODE)));
+        final var entity = converter.toEntity(dto);
+        return repository.save(entity)
+            .map(result -> {
+                if (BooleanUtils.isTrue(result)) {
+                    final var response = converter.toResponseDTO(entity);
+                    return Optional.of(response);
+                }
 
-        return false;
-    }
-
-    private boolean isValid(final String id) {
-
-        if (null == id) {
-            return false;
-        }
-
-        return UUID_PATTERN.asMatchPredicate().test(id);
+                return Optional.empty();
+            });
     }
 }

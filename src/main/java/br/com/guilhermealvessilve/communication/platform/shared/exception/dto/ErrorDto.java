@@ -201,39 +201,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator;
+package br.com.guilhermealvessilve.communication.platform.shared.exception.dto;
 
-import io.vertx.core.http.HttpServerResponse;
+import br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-import java.util.regex.Pattern;
+@Getter
+@Builder
+@RequiredArgsConstructor
+public class ErrorDto {
 
-import static br.com.guilhermealvessilve.communication.platform.shared.exception.dto.ErrorsDto.withError;
-import static br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages.INVALID_PARAMETER_CODE;
-import static br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus.BAD_REQUEST;
-import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.Jsons.toJson;
+    private final int status;
+    private final String code;
+    private final String message;
 
-public class SchedulerValidator {
-
-    private static final Pattern UUID_PATTERN = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}");
-
-    public boolean validateUUID(final String uuid, final HttpServerResponse response) {
-
-        if (isValid(uuid)) {
-            return true;
-        }
-
-        response.setStatusCode(BAD_REQUEST)
-            .end(toJson(withError(BAD_REQUEST, INVALID_PARAMETER_CODE)));
-
-        return false;
+    public static ErrorDto withError(final int status, final String code) {
+        return new ErrorDto(status, code, ErrorMessages.getMessage(code));
     }
 
-    private boolean isValid(final String id) {
-
-        if (null == id) {
-            return false;
-        }
-
-        return UUID_PATTERN.asMatchPredicate().test(id);
+    public static ErrorDto withError(final int status, final String code, final String message) {
+        return new ErrorDto(status, code, message);
     }
 }

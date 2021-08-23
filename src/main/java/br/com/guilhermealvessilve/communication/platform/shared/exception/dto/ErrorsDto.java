@@ -201,39 +201,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator;
+package br.com.guilhermealvessilve.communication.platform.shared.exception.dto;
 
-import io.vertx.core.http.HttpServerResponse;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NonNull;
 
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import static br.com.guilhermealvessilve.communication.platform.shared.exception.dto.ErrorsDto.withError;
-import static br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages.INVALID_PARAMETER_CODE;
-import static br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus.BAD_REQUEST;
-import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.Jsons.toJson;
+@Getter
+public class ErrorsDto {
 
-public class SchedulerValidator {
+    private final List<ErrorDto> errors = new ArrayList<>();
 
-    private static final Pattern UUID_PATTERN = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}");
-
-    public boolean validateUUID(final String uuid, final HttpServerResponse response) {
-
-        if (isValid(uuid)) {
-            return true;
-        }
-
-        response.setStatusCode(BAD_REQUEST)
-            .end(toJson(withError(BAD_REQUEST, INVALID_PARAMETER_CODE)));
-
-        return false;
+    public ErrorsDto add(@NonNull ErrorDto error) {
+        this.errors.add(error);
+        return this;
     }
 
-    private boolean isValid(final String id) {
+    public ErrorsDto addAll(@NonNull List<ErrorDto> errors) {
+        errors.forEach(this::add);
+        return this;
+    }
 
-        if (null == id) {
-            return false;
-        }
+    public boolean noError() {
+        return errors.isEmpty();
+    }
 
-        return UUID_PATTERN.asMatchPredicate().test(id);
+    public boolean hasError() {
+        return !errors.isEmpty();
+    }
+
+    public static ErrorsDto withError(final int status, @NotNull final String code) {
+        return new ErrorsDto().add(ErrorDto.withError(status, code));
+    }
+
+    public static ErrorsDto withErrors(@NotNull List<ErrorDto> dtos) {
+        return new ErrorsDto()
+            .addAll(dtos);
+    }
+
+    public static ErrorsDto withErrors(@NotNull ErrorDto... dtos) {
+        return new ErrorsDto()
+            .addAll(Arrays.asList(dtos));
     }
 }

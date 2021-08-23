@@ -11,7 +11,7 @@
 * [Docker](https://www.docker.com/)
 
 ## Tecnologias utilizadas nos testes
-* [H2](http://h2database.com/html/main.html)
+* [Testcontainers](https://www.testcontainers.org/)
 * [Rest Assured](http://rest-assured.io/)
 
 ## Facilidades de utilização das versões do Java

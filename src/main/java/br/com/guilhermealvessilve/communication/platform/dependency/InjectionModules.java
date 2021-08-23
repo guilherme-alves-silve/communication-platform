@@ -201,39 +201,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator;
+package br.com.guilhermealvessilve.communication.platform.dependency;
 
-import io.vertx.core.http.HttpServerResponse;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import lombok.experimental.UtilityClass;
 
-import java.util.regex.Pattern;
+/**
+ * Injector é thread-safe.
+ * Referência:
+ *  https://groups.google.com/g/google-guice/c/DfT0eHtYK1Y?pli=1
+ */
+@UtilityClass
+public class InjectionModules {
 
-import static br.com.guilhermealvessilve.communication.platform.shared.exception.dto.ErrorsDto.withError;
-import static br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages.INVALID_PARAMETER_CODE;
-import static br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus.BAD_REQUEST;
-import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.Jsons.toJson;
+    private static final Injector VERTX_INJECTOR = Guice.createInjector(new VertxModule());
 
-public class SchedulerValidator {
-
-    private static final Pattern UUID_PATTERN = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}");
-
-    public boolean validateUUID(final String uuid, final HttpServerResponse response) {
-
-        if (isValid(uuid)) {
-            return true;
-        }
-
-        response.setStatusCode(BAD_REQUEST)
-            .end(toJson(withError(BAD_REQUEST, INVALID_PARAMETER_CODE)));
-
-        return false;
-    }
-
-    private boolean isValid(final String id) {
-
-        if (null == id) {
-            return false;
-        }
-
-        return UUID_PATTERN.asMatchPredicate().test(id);
+    public static <T> T getInstance(Class<T> clazz) {
+        return VERTX_INJECTOR.getInstance(clazz);
     }
 }

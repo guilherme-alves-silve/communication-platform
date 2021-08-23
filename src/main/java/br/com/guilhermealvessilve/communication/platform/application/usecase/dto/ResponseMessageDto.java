@@ -201,36 +201,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.guilhermealvessilve.communication.platform.infrastructure.handler.exception;
+package br.com.guilhermealvessilve.communication.platform.application.usecase.dto;
 
 import lombok.Getter;
-import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.time.Instant;
+import java.util.UUID;
 
 @Getter
-public class ErrorsDTO {
+@RequiredArgsConstructor
+public class ResponseMessageDto {
 
-    private final List<ErrorDTO> errors = new ArrayList<>();
+    private final UUID id;
+    private final Instant scheduleTime;
+    private final String from;
+    private final String to;
+    private final Type type;
 
-    public ErrorsDTO add(@NonNull ErrorDTO error) {
-        this.errors.add(error);
-        return this;
-    }
-
-    public ErrorsDTO addAll(@NonNull List<ErrorDTO> errors) {
-        errors.forEach(this::add);
-        return this;
-    }
-
-    public static ErrorsDTO withError(final int status, final String code) {
-        return new ErrorsDTO().add(ErrorDTO.withError(status, code));
-    }
-
-    public static ErrorsDTO withErrors(ErrorDTO... dtos) {
-        return new ErrorsDTO()
-            .addAll(Arrays.asList(dtos));
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
+            .append("id", id)
+            .append("scheduleTime", scheduleTime)
+            .append("from", from)
+            .append("to", to)
+            .append("type", type)
+            .toString();
     }
 }

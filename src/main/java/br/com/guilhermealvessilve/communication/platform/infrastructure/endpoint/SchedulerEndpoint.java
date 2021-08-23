@@ -216,9 +216,9 @@ import lombok.extern.log4j.Log4j2;
 
 import java.util.UUID;
 
-import static br.com.guilhermealvessilve.communication.platform.infrastructure.handler.exception.ErrorsDTO.withError;
-import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.ErrorMessages.INTERNAL_SERVER_ERROR_CODE;
-import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.HttpStatus.INTERNAL_SERVER_ERROR;
+import static br.com.guilhermealvessilve.communication.platform.shared.exception.dto.ErrorsDto.withError;
+import static br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages.INTERNAL_SERVER_ERROR_CODE;
+import static br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus.INTERNAL_SERVER_ERROR;
 import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.Jsons.toJson;
 
 @Log4j2

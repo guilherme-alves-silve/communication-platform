@@ -201,27 +201,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.guilhermealvessilve.communication.platform.infrastructure.handler.exception;
+package br.com.guilhermealvessilve.communication.platform.application.usecase.dto;
 
-import br.com.guilhermealvessilve.communication.platform.infrastructure.util.ErrorMessages;
-import lombok.Builder;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.time.Instant;
 
 @Getter
-@Builder
 @RequiredArgsConstructor
-public class ErrorDTO {
+public class RequestMessageDto {
 
-    private final int status;
-    private final String code;
+    @NotNull
+    @Future
+    private final Instant scheduleTime;
+
+    @NotBlank
+    private final String from;
+
+    @NotBlank
+    private final String to;
+
+    @NotBlank
     private final String message;
 
-    public static ErrorDTO withError(final int status, final String code) {
-        return new ErrorDTO(status, code, ErrorMessages.getMessage(code));
-    }
+    @NotNull
+    private final Type type;
 
-    public static ErrorDTO withError(final int status, final String code, final String message) {
-        return new ErrorDTO(status, code, message);
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
+            .append("scheduleTime", scheduleTime)
+            .append("from", from)
+            .append("to", to)
+            .append("type", type)
+            .toString();
     }
 }

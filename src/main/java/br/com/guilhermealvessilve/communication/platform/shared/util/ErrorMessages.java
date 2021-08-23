@@ -1,4 +1,4 @@
-package br.com.guilhermealvessilve.communication.platform.infrastructure.util;
+package br.com.guilhermealvessilve.communication.platform.shared.util;
 
 import lombok.experimental.UtilityClass;
 

@@ -24,6 +24,9 @@
         <jackson.version>2.12.4</jackson.version>
         <guice.version>5.0.1</guice.version>
         <postgres.jdbc.version>42.2.23</postgres.jdbc.version>
+        <modelmapper.version>2.4.2</modelmapper.version>
+        <hibernate.validator.version>7.0.1.Final</hibernate.validator.version>
+        <jakarta.el.version>4.0.0</jakarta.el.version>
 
         <mockito.version>3.12.1</mockito.version>
         <assertj.version>3.20.2</assertj.version>
@@ -152,6 +155,24 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgres.jdbc.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${modelmapper.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate.validator.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.el</artifactId>
+            <version>${jakarta.el.version}</version>
         </dependency>
 
         <!-- Test -->
