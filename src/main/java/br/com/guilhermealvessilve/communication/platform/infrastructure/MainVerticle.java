@@ -1,5 +1,6 @@
 package br.com.guilhermealvessilve.communication.platform.infrastructure;
 
+import br.com.guilhermealvessilve.communication.platform.domain.AppConfiguration;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.database.migration.MigrationManager;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.SchedulerEndpoint;
 import br.com.guilhermealvessilve.communication.platform.dependency.InjectionModules;
@@ -24,9 +25,11 @@ public class MainVerticle extends AbstractVerticle {
 
         SchedulerEndpoint.configureEndpoint(vertx, router);
 
+        final var properties = AppConfiguration.configuration().properties();
+
         vertx.createHttpServer()
             .requestHandler(router)
-            .listen(8888)
+            .listen(Integer.parseInt(properties.getOrDefault("app.port", "8888")))
             .onSuccess(server -> LOGGER.info("HTTP server started on port {}", server.actualPort()));
     }
 }

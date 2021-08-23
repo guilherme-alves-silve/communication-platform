@@ -7,10 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Referência:
@@ -18,24 +15,24 @@ import java.util.Properties;
  * @author Guilherme Alves Silveira
  */
 @Log4j2
-public class CommunicationPlatformConfiguration {
+public class AppConfiguration {
 
     private final Map<String, String> properties = new HashMap<>();
 
-    private CommunicationPlatformConfiguration() {
+    private AppConfiguration() {
         //Must be singleton!
     }
 
     public Map<String, String> properties() {
 
         if (!properties.isEmpty()) {
-            return properties;
+            return Collections.unmodifiableMap(properties);
         }
 
         synchronized(this) {
 
             if (!properties.isEmpty()) {
-                return properties;
+                return Collections.unmodifiableMap(properties);
             }
 
             LOGGER.info("Loading application.properties");
@@ -47,7 +44,7 @@ public class CommunicationPlatformConfiguration {
                     ObjectUtils.toString(value, () -> StringUtils.EMPTY)));
 
                 LOGGER.info("Loaded application.properties!");
-                return properties;
+                return Collections.unmodifiableMap(properties);
             } catch (IOException ex) {
                 throw new IllegalStateException(ex);
             }
@@ -65,11 +62,11 @@ public class CommunicationPlatformConfiguration {
         return Objects.requireNonNull(input, "application.properties must exists!");
     }
 
-    public static CommunicationPlatformConfiguration configuration() {
+    public static AppConfiguration configuration() {
         return Factory.CONFIGURATION;
     }
 
     private static class Factory {
-        private static final CommunicationPlatformConfiguration CONFIGURATION = new CommunicationPlatformConfiguration();
+        private static final AppConfiguration CONFIGURATION = new AppConfiguration();
     }
 }

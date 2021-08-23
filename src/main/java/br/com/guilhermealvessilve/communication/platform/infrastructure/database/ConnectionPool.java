@@ -1,6 +1,6 @@
 package br.com.guilhermealvessilve.communication.platform.infrastructure.database;
 
-import br.com.guilhermealvessilve.communication.platform.domain.CommunicationPlatformConfiguration;
+import br.com.guilhermealvessilve.communication.platform.domain.AppConfiguration;
 import io.vertx.core.Vertx;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.PgPool;
@@ -16,7 +16,7 @@ public class ConnectionPool {
 
     public static SqlClient getClient(final Vertx vertx) {
 
-        final var configuration = CommunicationPlatformConfiguration
+        final var configuration = AppConfiguration
             .configuration()
             .properties();
 

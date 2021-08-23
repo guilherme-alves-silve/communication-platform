@@ -1,6 +1,6 @@
 package br.com.guilhermealvessilve.communication.platform.infrastructure.database.migration;
 
-import br.com.guilhermealvessilve.communication.platform.domain.CommunicationPlatformConfiguration;
+import br.com.guilhermealvessilve.communication.platform.domain.AppConfiguration;
 
 /**
  * @author Guilherme Alves Silveira
@@ -9,7 +9,7 @@ public class MigrationManager {
 
     public void migrate() {
 
-        final var configuration = CommunicationPlatformConfiguration.configuration()
+        final var configuration = AppConfiguration.configuration()
             .properties();
 
         final var jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s",

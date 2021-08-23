@@ -58,7 +58,14 @@ não bloqueante e assíncrona.
 
 Executar o docker-compose na raiz do projeto:
 ```
-docker-compose up
+Docker:
+    docker-compose up
+
+Java:
+    ./mvnw clean compile exec:java
+
+Porta:
+    8888
 ```
 
 Executar os testes:
@@ -74,11 +81,6 @@ Empacotar a aplicação:
 Executar a aplicação em debug:
 ```
 mvnDebug clean compile exec:java
-```
-
-Executar a aplicação:
-```
-./mvnw clean compile exec:java
 ```
 
 ## Depurar a aplicação
