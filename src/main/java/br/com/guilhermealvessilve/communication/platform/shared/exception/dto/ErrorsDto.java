@@ -206,6 +206,8 @@ package br.com.guilhermealvessilve.communication.platform.shared.exception.dto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NonNull;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -246,5 +248,12 @@ public class ErrorsDto {
     public static ErrorsDto withErrors(@NotNull ErrorDto... dtos) {
         return new ErrorsDto()
             .addAll(Arrays.asList(dtos));
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
+            .append("errors", errors)
+            .toString();
     }
 }

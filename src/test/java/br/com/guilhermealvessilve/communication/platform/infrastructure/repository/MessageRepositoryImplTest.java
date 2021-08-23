@@ -1,7 +1,7 @@
 package br.com.guilhermealvessilve.communication.platform.infrastructure.repository;
 
 import br.com.guilhermealvessilve.communication.platform.domain.entity.MessageEntity;
-import br.com.guilhermealvessilve.communication.platform.infrastructure.fixture.MessageEntityFixture;
+import br.com.guilhermealvessilve.communication.platform.fixture.MessageEntityFixture;
 import br.com.guilhermealvessilve.communication.platform.test.specific.PostgreSQLTestcontainersExtension;
 import br.com.guilhermealvessilve.communication.platform.test.specific.SQLTestHelper;
 import io.vertx.core.Vertx;

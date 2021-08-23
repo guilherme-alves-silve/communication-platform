@@ -203,6 +203,8 @@
  */
 package br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint;
 
+import br.com.guilhermealvessilve.communication.platform.application.usecase.CreateScheduledMessageUseCase;
+import br.com.guilhermealvessilve.communication.platform.dependency.InjectionModules;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator.SchedulerValidator;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator.Validators;
 import io.vertx.core.Vertx;
@@ -275,6 +277,11 @@ public class SchedulerEndpoint {
 
     private void handlePost(final RoutingContext ctx) {
 
+        final var createUseCase = InjectionModules.getInstance(CreateScheduledMessageUseCase.class);
+        ctx.request()
+            .body();
+
+        //createUseCase.create(dto);
     }
 
     private void handleDelete(final RoutingContext ctx) {

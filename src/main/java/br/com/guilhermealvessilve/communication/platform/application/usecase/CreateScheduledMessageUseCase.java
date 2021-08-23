@@ -209,21 +209,29 @@ import br.com.guilhermealvessilve.communication.platform.application.usecase.dto
 import br.com.guilhermealvessilve.communication.platform.application.usecase.validator.MessageDtoValidator;
 import br.com.guilhermealvessilve.communication.platform.domain.repository.MessageRepository;
 import br.com.guilhermealvessilve.communication.platform.shared.exception.ErrorViolationException;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.vertx.core.Future;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.Optional;
 
 @Singleton
-@RequiredArgsConstructor
 public final class CreateScheduledMessageUseCase {
 
     private final MessageDtoToEntityConverter converter;
     private final MessageRepository repository;
     private final MessageDtoValidator validator;
+
+    @Inject
+    public CreateScheduledMessageUseCase(@NonNull final MessageDtoToEntityConverter converter,
+                                         @NonNull final MessageRepository repository,
+                                         @NonNull final MessageDtoValidator validator) {
+        this.converter = converter;
+        this.repository = repository;
+        this.validator = validator;
+    }
 
     public Future<Optional<ResponseMessageDto>> create(@NonNull final RequestMessageDto dto) {
 
@@ -236,7 +244,7 @@ public final class CreateScheduledMessageUseCase {
         return repository.save(entity)
             .map(result -> {
                 if (BooleanUtils.isTrue(result)) {
-                    final var response = converter.toResponseDTO(entity);
+                    final var response = converter.toResponseDto(entity);
                     return Optional.of(response);
                 }
 

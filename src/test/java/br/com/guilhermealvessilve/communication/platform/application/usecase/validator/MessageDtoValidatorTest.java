@@ -201,19 +201,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.guilhermealvessilve.communication.platform.dependency;
+package br.com.guilhermealvessilve.communication.platform.application.usecase.validator;
 
-import com.google.inject.AbstractModule;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
+import br.com.guilhermealvessilve.communication.platform.fixture.RequestMessageDtoFixture;
+import br.com.guilhermealvessilve.communication.platform.shared.exception.dto.ErrorDto;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-class VertxModule extends AbstractModule {
+import java.util.Locale;
 
-    private static final ValidatorFactory FACTORY = Validation.buildDefaultValidatorFactory();
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
-    @Override
-    protected void configure() {
-        bind(Validator.class).toProvider(FACTORY::getValidator);
+class MessageDtoValidatorTest {
+
+    private MessageDtoValidator validator;
+
+    @BeforeEach
+    void setupEach() {
+        Locale.setDefault(Locale.US);
+        validator = new MessageDtoValidator();
+    }
+
+    @Test
+    void shouldValidateReturnNoErrorOfValidFields() {
+
+        final var dto = RequestMessageDtoFixture.fixtureRequestMessageDto();
+        final var errors = validator.validate(dto);
+        assertAll(
+            () -> assertThat(errors.noError()).isTrue(),
+            () -> assertThat(errors.hasError()).isFalse(),
+            () -> assertThat(errors.getErrors()).isEmpty()
+        );
+    }
+
+    @Test
+    void shouldValidateReturnErrorOfInvalidFields() {
+
+        final var dto = RequestMessageDtoFixture.fixtureInvalidRequestMessageDto();
+        final var errors = validator.validate(dto);
+        assertAll(
+            () -> assertThat(errors.noError()).isFalse(),
+            () -> assertThat(errors.hasError()).isTrue(),
+            () -> assertThat(errors.getErrors()).hasSize(5),
+            () -> assertThat(errors.getErrors()).contains(
+                ErrorDto.withError(400, "001", "message - must not be blank"),
+                ErrorDto.withError(400, "001", "to - must not be blank"),
+                ErrorDto.withError(400, "001", "scheduleTime - must not be null"),
+                ErrorDto.withError(400, "001", "type - must not be null"),
+                ErrorDto.withError(400, "001", "from - must not be blank")
+            )
+        );
     }
 }

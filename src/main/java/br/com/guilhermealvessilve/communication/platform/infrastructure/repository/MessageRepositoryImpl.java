@@ -109,6 +109,7 @@ public class MessageRepositoryImpl implements MessageRepository {
             row.getLocalDateTime("schedule_time").toInstant(ZoneOffset.UTC),
             row.getString("from_sender"),
             row.getString("to_destination"),
+            row.getString("message"),
             MessageEntity.Type.valueOf(row.getString("type")),
             row.getBoolean("sent")
         );

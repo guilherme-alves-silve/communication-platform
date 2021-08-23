@@ -201,19 +201,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.guilhermealvessilve.communication.platform.dependency;
+package br.com.guilhermealvessilve.communication.platform.application.usecase;
 
-import com.google.inject.AbstractModule;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
+public class DeleteScheduledMessageUseCase {
 
-class VertxModule extends AbstractModule {
-
-    private static final ValidatorFactory FACTORY = Validation.buildDefaultValidatorFactory();
-
-    @Override
-    protected void configure() {
-        bind(Validator.class).toProvider(FACTORY::getValidator);
-    }
 }

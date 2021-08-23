@@ -233,7 +233,7 @@ public class MessageDtoToEntityConverter {
         );
     }
 
-    public ResponseMessageDto toResponseDTO(@NonNull final MessageEntity entity) {
+    public ResponseMessageDto toResponseDto(@NonNull final MessageEntity entity) {
         return new ResponseMessageDto(
             entity.getId(),
             entity.getScheduleTime(),
