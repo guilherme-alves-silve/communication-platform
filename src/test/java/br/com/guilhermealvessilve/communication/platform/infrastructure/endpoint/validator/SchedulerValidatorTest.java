@@ -26,7 +26,7 @@ class SchedulerValidatorTest {
 
         final var mockResponse = Mockito.mock(HttpServerResponse.class);
         when(mockResponse.setStatusCode(anyInt())).thenReturn(mockResponse);
-        final var result = validator.validateUUID("invalid uuid", mockResponse);
+        final var result = validator.validate("invalid uuid", mockResponse);
         assertAll(
             () -> assertThat(result).isFalse(),
             () -> verify(mockResponse).setStatusCode(eq(BAD_REQUEST))
@@ -37,7 +37,7 @@ class SchedulerValidatorTest {
     void shouldValidatorReturnTrueInValidUUID() {
 
         final var mockResponse = Mockito.mock(HttpServerResponse.class);
-        final var result = validator.validateUUID("46218075-20a2-4a16-8d92-f2595f6161bd", mockResponse);
+        final var result = validator.validate("46218075-20a2-4a16-8d92-f2595f6161bd", mockResponse);
         assertAll(
             () -> assertThat(result).isTrue(),
             () -> verify(mockResponse, never()).setStatusCode(anyInt())

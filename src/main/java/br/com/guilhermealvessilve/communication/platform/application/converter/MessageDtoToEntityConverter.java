@@ -227,9 +227,9 @@ public class MessageDtoToEntityConverter {
             dto.getScheduleTime(),
             dto.getFrom(),
             dto.getTo(),
-            dto.getMessage(),
             MessageEntity.Type.valueOf(dto.getType().toString()),
-            NOT_SENT
+            NOT_SENT,
+            dto.getMessage()
         );
     }
 

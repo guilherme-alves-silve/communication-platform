@@ -4,6 +4,7 @@ CREATE TABLE message_tbl (
     from_sender VARCHAR(255) NOT NULL,
     to_destination VARCHAR(255) NOT NULL,
     type VARCHAR(50) NOT NULL,
+    message TEXT NOT NULL,
     sent BOOLEAN DEFAULT FALSE
 );
 

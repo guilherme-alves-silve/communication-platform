@@ -222,16 +222,16 @@ public class MessageEntity {
     private final Instant scheduleTime;
     private final String from;
     private final String to;
-    private final String message;
     private final Type type;
     private final boolean sent;
+    private final String text;
 
     public enum Type {
         EMAIL, SMS, PUSH, WHATSAPP;
     }
 
     public static MessageEntity withId(@NonNull final String id) {
-        return new MessageEntity(UUID.fromString(id), null, null, null, null, null, false);
+        return new MessageEntity(UUID.fromString(id), null, null, null, null,  false, null);
     }
 
     @Override

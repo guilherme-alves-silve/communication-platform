@@ -22,9 +22,9 @@ public class MessageEntityFixture {
             Instant.now(),
             from,
             to,
-            "Some message",
             types[new Random().nextInt(types.length)],
-            false
+            false,
+            "Some message"
         );
     }
 }

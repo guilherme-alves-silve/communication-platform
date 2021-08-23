@@ -203,17 +203,14 @@
  */
 package br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint;
 
-import br.com.guilhermealvessilve.communication.platform.application.converter.MessageDtoToEntityConverter;
 import br.com.guilhermealvessilve.communication.platform.application.usecase.CreateScheduledMessageUseCase;
+import br.com.guilhermealvessilve.communication.platform.application.usecase.FindScheduledMessageUseCase;
 import br.com.guilhermealvessilve.communication.platform.application.usecase.dto.RequestMessageDto;
-import br.com.guilhermealvessilve.communication.platform.application.usecase.validator.MessageDtoValidator;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.database.ConnectionPool;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.util.Responses;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator.SchedulerValidator;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator.Validators;
-import br.com.guilhermealvessilve.communication.platform.infrastructure.repository.MessageRepositoryImpl;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.util.Jsons;
-import br.com.guilhermealvessilve.communication.platform.shared.dependency.InjectionModules;
 import br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
@@ -226,9 +223,14 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
+import java.text.MessageFormat;
 import java.util.UUID;
 
 import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.Jsons.toJson;
+import static br.com.guilhermealvessilve.communication.platform.shared.exception.dto.ErrorsDto.withError;
+import static br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages.NOT_FOUND_CODE;
+import static br.com.guilhermealvessilve.communication.platform.shared.util.ErrorMessages.getMessage;
+import static br.com.guilhermealvessilve.communication.platform.shared.util.HttpStatus.NOT_FOUND;
 
 @Log4j2
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -276,24 +278,40 @@ public class SchedulerEndpoint {
         LOGGER.info("Request from address {} with id {}", address, id);
 
         final var response = ctx.response();
-        if (!validator.validateUUID(id, response)) {
+        if (!validator.validate(id, response)) {
             return;
         }
 
         final var uuid = UUID.fromString(id);
 
-        ctx.response().end("VALID " + uuid);
+        final var findUseCase = FindScheduledMessageUseCase.getInstance(client);
+        findUseCase.findById(uuid)
+            .onComplete(asyncResult -> {
+
+                if (Responses.handleFailure(asyncResult, ctx)) {
+                    return;
+                }
+
+                if (asyncResult.result().isEmpty()) {
+                    ctx.response()
+                        .end(toJson(withError(
+                            NOT_FOUND,
+                            NOT_FOUND_CODE,
+                            MessageFormat.format(getMessage(NOT_FOUND_CODE), uuid.toString())
+                        )));
+                    return;
+                }
+
+                ctx.response()
+                    .end(toJson(asyncResult.result().get()));
+            });
     }
 
     private void handlePost(final RoutingContext ctx) {
         final var body = ctx.getBodyAsString();
-        final var createUseCase = new CreateScheduledMessageUseCase(
-            InjectionModules.getInstance(MessageDtoToEntityConverter.class),
-            new MessageRepositoryImpl(client),
-            InjectionModules.getInstance(MessageDtoValidator.class)
-        );
-
         final var request = Jsons.fromJson(body, RequestMessageDto.class);
+
+        final var createUseCase = CreateScheduledMessageUseCase.getInstance(client);
         createUseCase.create(request)
             .onComplete(asyncResult -> {
 

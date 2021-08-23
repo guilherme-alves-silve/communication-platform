@@ -31,6 +31,7 @@ public class MessageRepositoryImpl implements MessageRepository {
                     ",to_destination",
                     ",type",
                     ",sent",
+                    ",message",
                 "FROM message_tbl",
                 "WHERE id = $1;"
             ))
@@ -58,6 +59,7 @@ public class MessageRepositoryImpl implements MessageRepository {
                 ",to_destination",
                 ",type",
                 ",sent",
+                ",message",
             "FROM message_tbl",
             "WHERE",
                 "schedule_time <= $1 AND",
@@ -90,15 +92,17 @@ public class MessageRepositoryImpl implements MessageRepository {
                 ",from_sender ",
                 ",to_destination ",
                 ",type",
+                ",message",
             ")",
-            "VALUES ($1, $2, $3, $4, $5);"
+            "VALUES ($1, $2, $3, $4, $5, $6);"
         ))
         .execute(Tuple.of(
             message.getId(),
             LocalDateTime.ofInstant(message.getScheduleTime(), ZoneId.systemDefault()),
             message.getFrom(),
             message.getTo(),
-            message.getType().toString()
+            message.getType().toString(),
+            message.getText()
         ))
         .map(rows -> rows.rowCount() == 1);
     }
@@ -109,9 +113,9 @@ public class MessageRepositoryImpl implements MessageRepository {
             row.getLocalDateTime("schedule_time").toInstant(ZoneOffset.UTC),
             row.getString("from_sender"),
             row.getString("to_destination"),
-            row.getString("message"),
             MessageEntity.Type.valueOf(row.getString("type")),
-            row.getBoolean("sent")
+            row.getBoolean("sent"),
+            row.getString("message")
         );
     }
 

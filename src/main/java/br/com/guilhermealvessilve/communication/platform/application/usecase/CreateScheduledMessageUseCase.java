@@ -208,26 +208,25 @@ import br.com.guilhermealvessilve.communication.platform.application.usecase.dto
 import br.com.guilhermealvessilve.communication.platform.application.usecase.dto.ResponseMessageDto;
 import br.com.guilhermealvessilve.communication.platform.application.usecase.validator.MessageDtoValidator;
 import br.com.guilhermealvessilve.communication.platform.domain.repository.MessageRepository;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.repository.MessageRepositoryImpl;
+import br.com.guilhermealvessilve.communication.platform.shared.dependency.InjectionModules;
 import br.com.guilhermealvessilve.communication.platform.shared.exception.ErrorViolationException;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import io.vertx.core.Future;
+import io.vertx.sqlclient.SqlClient;
 import lombok.NonNull;
 import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.Optional;
 
-@Singleton
 public final class CreateScheduledMessageUseCase {
 
     private final MessageDtoToEntityConverter converter;
     private final MessageRepository repository;
     private final MessageDtoValidator validator;
 
-    @Inject
-    public CreateScheduledMessageUseCase(@NonNull final MessageDtoToEntityConverter converter,
-                                         @NonNull final MessageRepository repository,
-                                         @NonNull final MessageDtoValidator validator) {
+    CreateScheduledMessageUseCase(@NonNull final MessageDtoToEntityConverter converter,
+                                  @NonNull final MessageRepository repository,
+                                  @NonNull final MessageDtoValidator validator) {
         this.converter = converter;
         this.repository = repository;
         this.validator = validator;
@@ -250,5 +249,13 @@ public final class CreateScheduledMessageUseCase {
 
                 return Optional.empty();
             });
+    }
+
+    public static CreateScheduledMessageUseCase getInstance(SqlClient client) {
+        return new CreateScheduledMessageUseCase(
+            InjectionModules.getInstance(MessageDtoToEntityConverter.class),
+            new MessageRepositoryImpl(client),
+            InjectionModules.getInstance(MessageDtoValidator.class)
+        );
     }
 }

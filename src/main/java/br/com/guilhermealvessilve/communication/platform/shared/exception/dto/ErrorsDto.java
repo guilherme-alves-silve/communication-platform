@@ -240,6 +240,10 @@ public class ErrorsDto {
         return new ErrorsDto().add(ErrorDto.withError(status, code));
     }
 
+    public static ErrorsDto withError(final int status, @NotNull final String code, final String message) {
+        return new ErrorsDto().add(ErrorDto.withError(status, code, message));
+    }
+
     public static ErrorsDto withErrors(@NotNull List<ErrorDto> dtos) {
         return new ErrorsDto()
             .addAll(dtos);

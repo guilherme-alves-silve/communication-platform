@@ -216,7 +216,7 @@ public class SchedulerValidator {
 
     private static final Pattern UUID_PATTERN = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}");
 
-    public boolean validateUUID(final String uuid, final HttpServerResponse response) {
+    public boolean validate(final String uuid, final HttpServerResponse response) {
 
         if (isValid(uuid)) {
             return true;
