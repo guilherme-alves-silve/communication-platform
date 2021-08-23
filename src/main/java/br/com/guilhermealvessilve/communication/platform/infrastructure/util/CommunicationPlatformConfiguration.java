@@ -201,36 +201,78 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.guilhermealvessilve.communication.platform.infrastructure.handler.exception;
+package br.com.guilhermealvessilve.communication.platform.infrastructure.util;
 
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
 
-@Getter
-public class ErrorsDTO {
+/**
+ * Referência:
+ *  https://stackoverflow.com/questions/1464291/how-to-really-read-text-file-from-classpath-in-java
+ * @author Guilherme Alves Silveira
+ */
+@Log4j2
+public class CommunicationPlatformConfiguration {
 
-    private final List<ErrorDTO> errors = new ArrayList<>();
+    private final Map<String, String> properties = new HashMap<>();
 
-    public ErrorsDTO add(@NonNull ErrorDTO error) {
-        this.errors.add(error);
-        return this;
+    private CommunicationPlatformConfiguration() {
+        //Must be singleton!
     }
 
-    public ErrorsDTO addAll(@NonNull List<ErrorDTO> errors) {
-        errors.forEach(this::add);
-        return this;
+    public Map<String, String> properties() {
+
+        if (!properties.isEmpty()) {
+            return properties;
+        }
+
+        synchronized(this) {
+
+            if (!properties.isEmpty()) {
+                return properties;
+            }
+
+            LOGGER.info("Loading application.properties");
+            try (final var input = new BufferedInputStream(getResourceAsStream())) {
+                final var temp = new Properties();
+                temp.load(input);
+                temp.forEach((key, value) -> properties.put(
+                    ObjectUtils.toString(key, () -> StringUtils.EMPTY),
+                    ObjectUtils.toString(value, () -> StringUtils.EMPTY)));
+
+                LOGGER.info("Loaded application.properties!");
+                return properties;
+            } catch (IOException ex) {
+                throw new IllegalStateException(ex);
+            }
+        }
     }
 
-    public static ErrorsDTO withError(final int status, final String code) {
-        return new ErrorsDTO().add(ErrorDTO.withError(status, code));
+    private InputStream getResourceAsStream() {
+        var input = this.getClass().getClassLoader()
+            .getResourceAsStream("/application.properties");
+
+        if (null == input) {
+            input = this.getClass().getResourceAsStream("application.properties");
+        }
+
+        return Objects.requireNonNull(input, "application.properties must exists!");
     }
 
-    public static ErrorsDTO withErrors(ErrorDTO... dtos) {
-        return new ErrorsDTO()
-            .addAll(Arrays.asList(dtos));
+    public static CommunicationPlatformConfiguration configuration() {
+        return Factory.CONFIGURATION;
+    }
+
+    private static class Factory {
+        private static final CommunicationPlatformConfiguration CONFIGURATION = new CommunicationPlatformConfiguration();
     }
 }

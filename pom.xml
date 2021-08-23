@@ -23,8 +23,11 @@
         <log4j.version>2.14.1</log4j.version>
         <jackson.version>2.12.4</jackson.version>
         <guice.version>5.0.1</guice.version>
+        <postgres.jdbc.version>42.2.23</postgres.jdbc.version>
+
         <mockito.version>3.12.1</mockito.version>
         <assertj.version>3.20.2</assertj.version>
+        <testcontainers.version>1.16.0</testcontainers.version>
         <junit-jupiter.version>5.7.0</junit-jupiter.version>
 
         <main.verticle>br.com.guilhermealvessilve.communication.platform.infrastructure.MainVerticle</main.verticle>
@@ -146,10 +149,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
-            <scope>test</scope>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgres.jdbc.version}</version>
         </dependency>
 
         <!-- Test -->
@@ -158,6 +160,34 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
 
