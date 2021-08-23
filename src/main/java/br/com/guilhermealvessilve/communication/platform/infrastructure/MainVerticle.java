@@ -2,7 +2,7 @@ package br.com.guilhermealvessilve.communication.platform.infrastructure;
 
 import br.com.guilhermealvessilve.communication.platform.infrastructure.database.migration.MigrationManager;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.SchedulerEndpoint;
-import br.com.guilhermealvessilve.communication.platform.configuration.dependency.InjectionModules;
+import br.com.guilhermealvessilve.communication.platform.dependency.InjectionModules;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.ext.web.Router;
 import lombok.extern.log4j.Log4j2;

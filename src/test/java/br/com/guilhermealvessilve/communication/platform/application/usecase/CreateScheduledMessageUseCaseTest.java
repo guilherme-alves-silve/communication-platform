@@ -6,8 +6,8 @@ import br.com.guilhermealvessilve.communication.platform.domain.repository.Messa
 import br.com.guilhermealvessilve.communication.platform.fixture.MessageEntityFixture;
 import br.com.guilhermealvessilve.communication.platform.fixture.RequestMessageDtoFixture;
 import br.com.guilhermealvessilve.communication.platform.fixture.ResponseMessageDtoFixture;
-import br.com.guilhermealvessilve.communication.platform.configuration.exception.ErrorViolationException;
-import br.com.guilhermealvessilve.communication.platform.configuration.exception.dto.ErrorsDto;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.exception.ErrorViolationException;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.exception.dto.ErrorsDto;
 import io.vertx.core.Future;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,5 +1,6 @@
 package br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator;
 
+import br.com.guilhermealvessilve.communication.platform.dependency.InjectionModules;
 import io.vertx.core.http.HttpServerResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ class SchedulerValidatorTest {
 
     @BeforeEach
     void setupEach() {
-        this.validator = new SchedulerValidator();
+        this.validator = InjectionModules.getInstance(SchedulerValidator.class);
     }
 
     @Test

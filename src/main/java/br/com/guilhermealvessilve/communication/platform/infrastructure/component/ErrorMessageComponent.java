@@ -1,12 +1,9 @@
-package br.com.guilhermealvessilve.communication.platform.configuration.util;
-
-import lombok.experimental.UtilityClass;
+package br.com.guilhermealvessilve.communication.platform.infrastructure.component;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@UtilityClass
-public class ErrorMessages {
+public class ErrorMessageComponent {
 
     private static final Map<String, String> CODE_AND_MESSAGE = new HashMap<>();
 
@@ -20,7 +17,7 @@ public class ErrorMessages {
     public static final String INTERNAL_SERVER_ERROR_CODE = "002";
     public static final String NOT_FOUND_CODE = "003";
 
-    public static String getMessage(final String code) {
+    public String getMessage(final String code) {
         return CODE_AND_MESSAGE.get(code);
     }
 }

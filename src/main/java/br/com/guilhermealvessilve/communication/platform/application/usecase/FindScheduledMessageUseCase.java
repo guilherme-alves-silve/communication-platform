@@ -4,7 +4,7 @@ import br.com.guilhermealvessilve.communication.platform.application.converter.M
 import br.com.guilhermealvessilve.communication.platform.application.usecase.dto.ResponseMessageDto;
 import br.com.guilhermealvessilve.communication.platform.domain.repository.MessageRepository;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.repository.MessageRepositoryImpl;
-import br.com.guilhermealvessilve.communication.platform.configuration.dependency.InjectionModules;
+import br.com.guilhermealvessilve.communication.platform.dependency.InjectionModules;
 import io.vertx.core.Future;
 import io.vertx.sqlclient.SqlClient;
 import lombok.NonNull;

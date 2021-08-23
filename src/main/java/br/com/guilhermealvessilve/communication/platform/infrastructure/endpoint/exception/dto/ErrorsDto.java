@@ -1,4 +1,4 @@
-package br.com.guilhermealvessilve.communication.platform.configuration.exception.dto;
+package br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.exception.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

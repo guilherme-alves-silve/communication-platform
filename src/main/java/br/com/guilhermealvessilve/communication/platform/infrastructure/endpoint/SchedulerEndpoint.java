@@ -4,11 +4,12 @@ import br.com.guilhermealvessilve.communication.platform.application.usecase.Cre
 import br.com.guilhermealvessilve.communication.platform.application.usecase.DeleteScheduledMessageUseCase;
 import br.com.guilhermealvessilve.communication.platform.application.usecase.FindScheduledMessageUseCase;
 import br.com.guilhermealvessilve.communication.platform.application.usecase.dto.RequestMessageDto;
+import br.com.guilhermealvessilve.communication.platform.dependency.InjectionModules;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.component.JsonComponent;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.database.ConnectionPool;
-import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.util.Responses;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.component.ResponseComponent;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator.SchedulerValidator;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator.Validators;
-import br.com.guilhermealvessilve.communication.platform.infrastructure.util.Jsons;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
@@ -22,22 +23,34 @@ import lombok.extern.log4j.Log4j2;
 
 import java.util.UUID;
 
-import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.Jsons.toJson;
 import static java.net.HttpURLConnection.*;
 
 @Log4j2
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class SchedulerEndpoint {
 
     private final Vertx vertx;
     private final Router router;
-    private final SchedulerValidator validator;
     private final SqlClient client;
+    private final SchedulerValidator validator;
+    private final ResponseComponent responseComponent;
+    private final JsonComponent jsonComponent;
 
-    public static void configureEndpoint(@NonNull final Vertx vertx, @NonNull final Router router) {
-        final var validator = new SchedulerValidator();
+    SchedulerEndpoint(@NonNull final Vertx vertx,
+                      @NonNull final Router router,
+                      @NonNull final SqlClient client) {
+        this.vertx = vertx;
+        this.router = router;
+        this.client = client;
+        this.validator = InjectionModules.getInstance(SchedulerValidator.class);
+        this.responseComponent = InjectionModules.getInstance(ResponseComponent.class);
+        this.jsonComponent = InjectionModules.getInstance(JsonComponent.class);
+    }
+
+    public static void configureEndpoint(@NonNull final Vertx vertx,
+                                         @NonNull final Router router) {
         final var client = ConnectionPool.getClient(vertx);
-        final var endpoint = new SchedulerEndpoint(vertx, router, validator, client);
+        final var endpoint = new SchedulerEndpoint(vertx, router, client);
         endpoint.configure();
     }
 
@@ -45,7 +58,7 @@ public class SchedulerEndpoint {
         router.route(HttpMethod.GET, "/scheduler/:id")
             .produces("application/json")
             .handler(this::handleGet)
-            .failureHandler(Responses::handleFailure);
+            .failureHandler(responseComponent::handleFailure);
 
         router.route(HttpMethod.POST, "/scheduler")
             .consumes("application/json")
@@ -53,12 +66,12 @@ public class SchedulerEndpoint {
             .handler(Validators.bodyRequiredHandler(vertx))
             .handler(BodyHandler.create())
             .handler(this::handlePost)
-            .failureHandler(Responses::handleFailure);
+            .failureHandler(responseComponent::handleFailure);
 
         router.route(HttpMethod.DELETE, "/scheduler/:id")
             .consumes("application/json")
             .handler(this::handleDelete)
-            .failureHandler(Responses::handleFailure);
+            .failureHandler(responseComponent::handleFailure);
     }
 
     private void handleGet(final RoutingContext ctx) {
@@ -77,36 +90,36 @@ public class SchedulerEndpoint {
         findUseCase.findById(uuid)
             .onComplete(asyncResult -> {
 
-                if (Responses.handleFailure(asyncResult, ctx)) {
+                if (responseComponent.handleFailure(asyncResult, ctx)) {
                     return;
                 }
 
                 if (asyncResult.result().isEmpty()) {
-                    Responses.notFound(ctx, uuid.toString());
+                    responseComponent.notFound(ctx, uuid.toString());
                     return;
                 }
 
                 ctx.response()
                     .setStatusCode(HTTP_OK)
-                    .end(toJson(asyncResult.result().get()));
+                    .end(jsonComponent.toJson(asyncResult.result().get()));
             });
     }
 
     private void handlePost(final RoutingContext ctx) {
         final var body = ctx.getBodyAsString();
-        final var request = Jsons.fromJson(body, RequestMessageDto.class);
+        final var request = jsonComponent.fromJson(body, RequestMessageDto.class);
 
         final var createUseCase = CreateScheduledMessageUseCase.getInstance(client);
         createUseCase.create(request)
             .onComplete(asyncResult -> {
 
-                if (Responses.handleFailure(asyncResult, ctx)) {
+                if (responseComponent.handleFailure(asyncResult, ctx)) {
                     return;
                 }
 
                 ctx.response()
                     .setStatusCode(HTTP_ACCEPTED)
-                    .end(toJson(asyncResult.result().orElseThrow()));
+                    .end(jsonComponent.toJson(asyncResult.result().orElseThrow()));
             });
     }
 
@@ -125,12 +138,12 @@ public class SchedulerEndpoint {
         findUseCase.deleteById(uuid)
             .onComplete(asyncResult -> {
 
-                if (Responses.handleFailure(asyncResult, ctx)) {
+                if (responseComponent.handleFailure(asyncResult, ctx)) {
                     return;
                 }
 
                 if (!asyncResult.result()) {
-                    Responses.notFound(ctx, uuid.toString());
+                    responseComponent.notFound(ctx, uuid.toString());
                     return;
                 }
 

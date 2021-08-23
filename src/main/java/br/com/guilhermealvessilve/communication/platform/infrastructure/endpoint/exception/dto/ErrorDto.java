@@ -1,6 +1,7 @@
-package br.com.guilhermealvessilve.communication.platform.configuration.exception.dto;
+package br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.exception.dto;
 
-import br.com.guilhermealvessilve.communication.platform.configuration.util.ErrorMessages;
+import br.com.guilhermealvessilve.communication.platform.dependency.InjectionModules;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.component.ErrorMessageComponent;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,7 +20,8 @@ public class ErrorDto {
     private final String message;
 
     public static ErrorDto withError(final int status, final String code) {
-        return new ErrorDto(status, code, ErrorMessages.getMessage(code));
+        final var component = InjectionModules.getInstance(ErrorMessageComponent.class);
+        return new ErrorDto(status, code, component.getMessage(code));
     }
 
     public static ErrorDto withError(final int status, final String code, final String message) {

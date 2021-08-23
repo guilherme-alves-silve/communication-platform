@@ -1,12 +1,11 @@
-package br.com.guilhermealvessilve.communication.platform.infrastructure.util;
+package br.com.guilhermealvessilve.communication.platform.infrastructure.component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
-@UtilityClass
-public class Jsons {
+public class JsonComponent {
 
     private static final ObjectMapper MAPPER;
 
@@ -17,12 +16,12 @@ public class Jsons {
     }
 
     @SneakyThrows
-    public static String toJson(final Object object) {
+    public String toJson(final Object object) {
         return MAPPER.writeValueAsString(object);
     }
 
     @SneakyThrows
-    public static <T> T fromJson(String json, Class<T> clazz) {
+    public <T> T fromJson(String json, Class<T> clazz) {
         return MAPPER.readValue(json, clazz);
     }
 }

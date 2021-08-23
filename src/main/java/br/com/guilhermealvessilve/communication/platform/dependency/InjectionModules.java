@@ -1,4 +1,4 @@
-package br.com.guilhermealvessilve.communication.platform.configuration.dependency;
+package br.com.guilhermealvessilve.communication.platform.dependency;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

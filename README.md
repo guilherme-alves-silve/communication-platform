@@ -12,8 +12,8 @@ O Vert.x é utilizado também pelo framework [Quarkus](https://quarkus.io/guides
 
 ## Arquitetura do projeto
 
-Segue um modelo parecido ao Clean-Architecture, aonde as regras de negócio são separadas da parte
-de implementação arquitetural. Sendo dividido em:
+Segue um modelo parecido ao [Clean-Architecture](https://www.freecodecamp.org/news/a-quick-introduction-to-clean-architecture-990c014448d2/),
+aonde as regras de negócio são separadas da parte da implementação propriemanete técnica. Sendo dividido em:
 
 * application: Porta de entrada dos dados e saída, nesse caso, ele não é acoplado com o framework.
 O framework, console ou UI, que realizam a chamada a esse módulo.

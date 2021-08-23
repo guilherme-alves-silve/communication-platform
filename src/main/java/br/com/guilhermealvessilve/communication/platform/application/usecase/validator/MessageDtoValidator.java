@@ -1,10 +1,10 @@
 package br.com.guilhermealvessilve.communication.platform.application.usecase.validator;
 
 import br.com.guilhermealvessilve.communication.platform.application.usecase.dto.RequestMessageDto;
-import br.com.guilhermealvessilve.communication.platform.configuration.dependency.InjectionModules;
-import br.com.guilhermealvessilve.communication.platform.configuration.exception.dto.ErrorDto;
-import br.com.guilhermealvessilve.communication.platform.configuration.exception.dto.ErrorsDto;
-import br.com.guilhermealvessilve.communication.platform.configuration.util.ErrorMessages;
+import br.com.guilhermealvessilve.communication.platform.dependency.InjectionModules;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.exception.dto.ErrorDto;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.exception.dto.ErrorsDto;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.component.ErrorMessageComponent;
 import com.google.inject.Singleton;
 import jakarta.validation.Validator;
 import org.hibernate.validator.internal.engine.path.PathImpl;
@@ -23,7 +23,7 @@ public class MessageDtoValidator {
         final var errors = constraints.stream()
             .map(violation -> ErrorDto.withError(
                 HTTP_BAD_REQUEST,
-                ErrorMessages.INVALID_PARAMETER_CODE,
+                ErrorMessageComponent.INVALID_PARAMETER_CODE,
                 String.format("%s - %s", ((PathImpl) violation.getPropertyPath()).getLeafNode().getName(), violation.getMessage())
             ))
             .collect(Collectors.toList());

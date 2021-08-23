@@ -1,7 +1,8 @@
 package br.com.guilhermealvessilve.communication.platform.application.usecase.validator;
 
+import br.com.guilhermealvessilve.communication.platform.dependency.InjectionModules;
 import br.com.guilhermealvessilve.communication.platform.fixture.RequestMessageDtoFixture;
-import br.com.guilhermealvessilve.communication.platform.configuration.exception.dto.ErrorDto;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.exception.dto.ErrorDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +18,7 @@ class MessageDtoValidatorTest {
     @BeforeEach
     void setupEach() {
         Locale.setDefault(Locale.US);
-        validator = new MessageDtoValidator();
+        validator = InjectionModules.getInstance(MessageDtoValidator.class);
     }
 
     @Test

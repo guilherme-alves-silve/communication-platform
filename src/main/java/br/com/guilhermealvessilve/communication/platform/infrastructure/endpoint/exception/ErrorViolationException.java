@@ -1,6 +1,6 @@
-package br.com.guilhermealvessilve.communication.platform.configuration.exception;
+package br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.exception;
 
-import br.com.guilhermealvessilve.communication.platform.configuration.exception.dto.ErrorsDto;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.exception.dto.ErrorsDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
