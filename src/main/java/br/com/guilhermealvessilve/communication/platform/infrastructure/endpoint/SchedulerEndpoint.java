@@ -212,6 +212,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
+import java.util.UUID;
+
 @Log4j2
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class SchedulerEndpoint {
@@ -226,15 +228,33 @@ public class SchedulerEndpoint {
     }
 
     private void configure() {
-        router.route(HttpMethod.GET, "/scheduler/:id").handler(this::handleGet);
-        router.route(HttpMethod.POST, "/scheduler").handler(this::handlePost);
-        router.route(HttpMethod.DELETE, "/scheduler/:id").handler(this::handleDelete);
+        router.route(HttpMethod.GET, "/scheduler/:id")
+            .consumes("application/json")
+            .handler(this::handleGet);
+
+        router.route(HttpMethod.POST, "/scheduler")
+            .consumes("application/json")
+            .handler(this::handlePost);
+
+        router.route(HttpMethod.DELETE, "/scheduler/:id")
+            .consumes("application/json")
+            .handler(this::handleDelete);
     }
 
     private void handleGet(final RoutingContext ctx) {
         final String address = ctx.request().connection().remoteAddress().toString();
-        final var id = validator.toUUID(ctx.pathParam("id"));
+
+        final var id = ctx.pathParam("id");
         LOGGER.info("Request from address {} with id {}", address, id);
+        if (!validator.validUUID(id)) {
+            ctx.response()
+                .setStatusCode(400)
+                .end();
+        }
+
+        final var uuid = UUID.fromString(id);
+
+        ctx.response().end("VALID " + uuid);
     }
 
     private void handlePost(final RoutingContext ctx) {

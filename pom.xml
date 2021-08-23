@@ -21,6 +21,8 @@
         <lombok.version>1.18.12</lombok.version>
         <apache.commons.version>3.12.0</apache.commons.version>
         <log4j.version>2.14.1</log4j.version>
+        <jackson.version>2.12.4</jackson.version>
+        <guice.version>5.0.1</guice.version>
         <junit-jupiter.version>5.7.0</junit-jupiter.version>
 
         <main.verticle>br.com.guilhermealvessilve.communication.platform.infrastructure.MainVerticle</main.verticle>
@@ -109,6 +111,36 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
         </dependency>
 
         <dependency>

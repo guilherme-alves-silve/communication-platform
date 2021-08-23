@@ -203,16 +203,18 @@
  */
 package br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator;
 
-import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class SchedulerValidator {
 
-    public UUID toUUID(final String id) {
+    private static final Pattern UUID_PATTERN = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}");
+
+    public boolean validUUID(final String id) {
 
         if (null == id) {
-            throw new IllegalArgumentException("Invalid id " + id);
+            return false;
         }
 
-        return UUID.fromString(id);
+        return UUID_PATTERN.asMatchPredicate().test(id);
     }
 }
