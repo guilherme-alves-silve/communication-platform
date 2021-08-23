@@ -1,12 +1,15 @@
 package br.com.guilhermealvessilve.communication.platform.infrastructure;
 
+import br.com.guilhermealvessilve.communication.platform.dependency.InjectionModules;
 import br.com.guilhermealvessilve.communication.platform.domain.AppConfiguration;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.database.migration.MigrationManager;
 import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.SchedulerEndpoint;
-import br.com.guilhermealvessilve.communication.platform.dependency.InjectionModules;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.ext.web.Router;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
+
+import java.util.Locale;
 
 /**
  * @author Guilherme Alves Silveira
@@ -14,10 +17,19 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class MainVerticle extends AbstractVerticle {
 
+    private final MigrationManager migration;
+
+    public MainVerticle() {
+        this(InjectionModules.getInstance(MigrationManager.class));
+    }
+
+    MainVerticle(@NonNull final MigrationManager migration) {
+        this.migration = migration;
+        configureDefaultLanguage();
+    }
+
     @Override
     public void start() {
-
-        final var migration = InjectionModules.getInstance(MigrationManager.class);
 
         migration.migrate();
 
@@ -31,5 +43,9 @@ public class MainVerticle extends AbstractVerticle {
             .requestHandler(router)
             .listen(Integer.parseInt(properties.getOrDefault("app.port", "8888")))
             .onSuccess(server -> LOGGER.info("HTTP server started on port {}", server.actualPort()));
+    }
+
+    private void configureDefaultLanguage() {
+        Locale.setDefault(Locale.US);
     }
 }
