@@ -20,9 +20,9 @@
 
 ## Endpoints
 
-* POST: /scheduling/
-* GET: /scheduling/status/{id}
-* DELETE: /scheduling/{id}
+* POST: /scheduler/
+* GET: /scheduler/status/{id}
+* DELETE: /scheduler/{id}
 
 ## Swagger
 
@@ -42,7 +42,19 @@ Empacotar a aplicação:
 ./mvnw clean package
 ```
 
+Executar a aplicação em debug:
+```
+mvnDebug clean compile exec:java
+```
+
 Executar a aplicação:
 ```
 ./mvnw clean compile exec:java
 ```
+
+## Depurar a aplicação
+
+* [Intelijj](https://www.jetbrains.com/help/idea/run-debug-configurations-dialog.html#toolbar)
+* [Eclipse](https://www.eclipse.org/community/eclipse_newsletter/2017/june/article1.php)
+* [NetBeans](https://netbeans.apache.org/kb/docs/java/debug-visual_pt_BR.html)
+* [VSCode](https://code.visualstudio.com/docs/java/java-debugging)
