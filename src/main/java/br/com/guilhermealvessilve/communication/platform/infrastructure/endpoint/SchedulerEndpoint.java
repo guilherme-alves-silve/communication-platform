@@ -204,6 +204,8 @@
 package br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint;
 
 import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator.SchedulerValidator;
+import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator.Validators;
+import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -214,42 +216,56 @@ import lombok.extern.log4j.Log4j2;
 
 import java.util.UUID;
 
+import static br.com.guilhermealvessilve.communication.platform.infrastructure.handler.exception.ErrorsDTO.withError;
+import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.ErrorMessages.INTERNAL_SERVER_ERROR_CODE;
+import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.HttpStatus.INTERNAL_SERVER_ERROR;
+import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.Jsons.toJson;
+
 @Log4j2
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class SchedulerEndpoint {
 
+    private final Vertx vertx;
     private final Router router;
     private final SchedulerValidator validator;
 
-    public static void configureEndpoint(@NonNull final Router router) {
+    public static void configureEndpoint(@NonNull final Vertx vertx, @NonNull final Router router) {
         final var validator = new SchedulerValidator();
-        final var endpoint = new SchedulerEndpoint(router, validator);
+        final var endpoint = new SchedulerEndpoint(vertx, router, validator);
         endpoint.configure();
     }
 
     private void configure() {
         router.route(HttpMethod.GET, "/scheduler/:id")
-            .consumes("application/json")
-            .handler(this::handleGet);
+            .produces("application/json")
+            .handler(this::handleGet)
+            .failureHandler(this::handleFailure);
 
         router.route(HttpMethod.POST, "/scheduler")
             .consumes("application/json")
-            .handler(this::handlePost);
+            .produces("application/json")
+            .handler(Validators.bodyRequiredHandler(vertx))
+            .handler(this::handlePost)
+            .failureHandler(this::handleFailure);
 
         router.route(HttpMethod.DELETE, "/scheduler/:id")
             .consumes("application/json")
-            .handler(this::handleDelete);
+            .handler(this::handleDelete)
+            .failureHandler(this::handleFailure);
     }
 
     private void handleGet(final RoutingContext ctx) {
-        final String address = ctx.request().connection().remoteAddress().toString();
+        final var address = ctx.request()
+            .connection()
+            .remoteAddress()
+            .toString();
 
         final var id = ctx.pathParam("id");
         LOGGER.info("Request from address {} with id {}", address, id);
-        if (!validator.validUUID(id)) {
-            ctx.response()
-                .setStatusCode(400)
-                .end();
+
+        final var response = ctx.response();
+        if (!validator.validateUUID(id, response)) {
+            return;
         }
 
         final var uuid = UUID.fromString(id);
@@ -263,5 +279,11 @@ public class SchedulerEndpoint {
 
     private void handleDelete(final RoutingContext ctx) {
 
+    }
+
+    private void handleFailure(final RoutingContext ctx) {
+        ctx.response()
+            .setStatusCode(INTERNAL_SERVER_ERROR)
+            .end(toJson(withError(INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR_CODE)));
     }
 }

@@ -203,37 +203,30 @@
  */
 package br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.validator;
 
-import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.Vertx;
+import io.vertx.ext.web.validation.RequestPredicate;
+import io.vertx.ext.web.validation.ValidationHandler;
+import io.vertx.json.schema.SchemaParser;
+import io.vertx.json.schema.SchemaRouter;
+import io.vertx.json.schema.SchemaRouterOptions;
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 
-import java.util.regex.Pattern;
+/**
+ * Referência:
+ *  https://github.com/vert-x3/vertx-examples/blob/4.x/web-examples/src/main/java/io/vertx/example/web/validation/ValidationExampleServer.java
+ * @author Guilherme Alves Silveira
+ */
+@UtilityClass
+public class Validators {
 
-import static br.com.guilhermealvessilve.communication.platform.infrastructure.handler.exception.ErrorsDTO.withError;
-import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.ErrorMessages.INVALID_PARAMETER_CODE;
-import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.HttpStatus.BAD_REQUEST;
-import static br.com.guilhermealvessilve.communication.platform.infrastructure.util.Jsons.toJson;
+    public static ValidationHandler bodyRequiredHandler(@NonNull final Vertx vertx) {
+        final var schemaParser = SchemaParser.createDraft7SchemaParser(
+            SchemaRouter.create(vertx, new SchemaRouterOptions())
+        );
 
-public class SchedulerValidator {
-
-    private static final Pattern UUID_PATTERN = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}");
-
-    public boolean validateUUID(final String uuid, final HttpServerResponse response) {
-
-        if (isValid(uuid)) {
-            return true;
-        }
-
-        response.setStatusCode(BAD_REQUEST)
-            .end(toJson(withError(BAD_REQUEST, INVALID_PARAMETER_CODE)));
-
-        return false;
-    }
-
-    private boolean isValid(final String id) {
-
-        if (null == id) {
-            return false;
-        }
-
-        return UUID_PATTERN.asMatchPredicate().test(id);
+        return ValidationHandler.builder(schemaParser)
+            .predicate(RequestPredicate.BODY_REQUIRED)
+            .build();
     }
 }

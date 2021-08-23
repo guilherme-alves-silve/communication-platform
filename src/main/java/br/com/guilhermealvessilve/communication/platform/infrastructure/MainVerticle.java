@@ -219,7 +219,7 @@ public class MainVerticle extends AbstractVerticle {
 
         final var router = Router.router(vertx);
 
-        SchedulerEndpoint.configureEndpoint(router);
+        SchedulerEndpoint.configureEndpoint(vertx, router);
 
         vertx.createHttpServer()
             .requestHandler(router)
