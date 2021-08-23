@@ -12,7 +12,11 @@
 
 ## Tecnologias utilizadas nos testes
 * [Testcontainers](https://www.testcontainers.org/)
-* [Rest Assured](http://rest-assured.io/)
+* [Mockito](https://site.mockito.org/)
+* [AssertJ](https://assertj.github.io/doc/)
+
+## Cobertura de código
+* [JaCoCo](https://www.eclemma.org/jacoco/)
 
 ## Facilidades de utilização das versões do Java
 
@@ -63,3 +67,4 @@ Executar a aplicação:
 
 * [Adicionar autenticação e autorização](https://vertx.io/blog/jwt-authorization-for-vert-x-with-keycloak/)
 * [Substituir o vertx.serTimeout por NOTIFY do Redis ou mecanismo de fila](https://medium.com/nerd-for-tech/redis-getting-notified-when-a-key-is-expired-or-changed-ca3e1f1c7f0a)
+* [Possivel refatoração utilizando event-bus](https://fdk.codes/you-might-not-need-dependency-injection-in-a-vertx-application/)
