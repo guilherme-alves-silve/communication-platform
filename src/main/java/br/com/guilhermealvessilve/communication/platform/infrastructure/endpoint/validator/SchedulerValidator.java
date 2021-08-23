@@ -3,6 +3,7 @@ package br.com.guilhermealvessilve.communication.platform.infrastructure.endpoin
 import br.com.guilhermealvessilve.communication.platform.infrastructure.component.JsonComponent;
 import com.google.inject.Inject;
 import io.vertx.core.http.HttpServerResponse;
+import lombok.NonNull;
 
 import java.util.regex.Pattern;
 
@@ -10,6 +11,9 @@ import static br.com.guilhermealvessilve.communication.platform.infrastructure.c
 import static br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.exception.dto.ErrorsDto.withError;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 public class SchedulerValidator {
 
     private static final Pattern UUID_PATTERN = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}");
@@ -17,7 +21,7 @@ public class SchedulerValidator {
     private final JsonComponent jsonComponent;
 
     @Inject
-    public SchedulerValidator(JsonComponent jsonComponent) {
+    public SchedulerValidator(@NonNull final JsonComponent jsonComponent) {
         this.jsonComponent = jsonComponent;
     }
 

@@ -10,6 +10,9 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 class VertxModule extends AbstractModule {
 
     private static final ValidatorFactory FACTORY = Validation.buildDefaultValidatorFactory();

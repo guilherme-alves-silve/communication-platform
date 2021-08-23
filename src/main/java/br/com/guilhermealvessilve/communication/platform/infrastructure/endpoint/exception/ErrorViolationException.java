@@ -4,6 +4,9 @@ import br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 @Getter
 @RequiredArgsConstructor
 public class ErrorViolationException extends RuntimeException {

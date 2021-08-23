@@ -3,6 +3,9 @@ package br.com.guilhermealvessilve.communication.platform.infrastructure.databas
 import lombok.experimental.UtilityClass;
 import org.flywaydb.core.Flyway;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 @UtilityClass
 public class FlywayConfiguration {
 

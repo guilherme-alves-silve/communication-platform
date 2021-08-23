@@ -21,6 +21,10 @@ O framework, console ou UI, que realizam a chamada a esse módulo.
 * instrastructure: contém de fato o framework, nesse caso, sendo um servidor HTTP implementado com programação
 não bloqueante e assíncrona.
 
+## Mesmo desafio, porém implementado com Quarkus:
+
+* [communication-scheduling](https://github.com/guilherme-alves-silve/communication-scheduling)
+
 ## Ambiente para execução
 * [Java 11+](http://openjdk.java.net/projects/jdk/11/)
 * [Docker](https://www.docker.com/)

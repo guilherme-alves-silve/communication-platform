@@ -9,6 +9,9 @@ import lombok.NonNull;
 
 import java.util.UUID;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 @Singleton
 public class MessageDtoToEntityConverter {
 

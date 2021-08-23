@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 public class JsonComponent {
 
     private static final ObjectMapper MAPPER;

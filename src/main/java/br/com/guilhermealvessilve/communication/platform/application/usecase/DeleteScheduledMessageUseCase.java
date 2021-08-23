@@ -8,6 +8,9 @@ import lombok.NonNull;
 
 import java.util.UUID;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 public class DeleteScheduledMessageUseCase {
 
     private final MessageRepository repository;

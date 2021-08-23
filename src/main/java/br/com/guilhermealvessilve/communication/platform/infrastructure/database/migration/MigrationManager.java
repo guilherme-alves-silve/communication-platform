@@ -2,6 +2,9 @@ package br.com.guilhermealvessilve.communication.platform.infrastructure.databas
 
 import br.com.guilhermealvessilve.communication.platform.domain.CommunicationPlatformConfiguration;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 public class MigrationManager {
 
     public void migrate() {

@@ -8,6 +8,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import java.time.Instant;
 import java.util.UUID;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 @Getter
 @RequiredArgsConstructor
 public class ResponseMessageDto {

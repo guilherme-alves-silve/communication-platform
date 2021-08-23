@@ -8,6 +8,8 @@ import lombok.experimental.UtilityClass;
  * Injector é thread-safe.
  * Referência:
  *  https://groups.google.com/g/google-guice/c/DfT0eHtYK1Y?pli=1
+ *
+ * @author Guilherme Alves Silveira
  */
 @UtilityClass
 public class InjectionModules {

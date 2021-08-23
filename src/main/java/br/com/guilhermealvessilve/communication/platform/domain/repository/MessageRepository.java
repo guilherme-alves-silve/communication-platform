@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 public interface MessageRepository {
 
     Future<Optional<MessageEntity>> findById(final UUID id);

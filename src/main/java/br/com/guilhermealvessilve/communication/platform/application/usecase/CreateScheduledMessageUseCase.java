@@ -15,6 +15,9 @@ import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.Optional;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 public final class CreateScheduledMessageUseCase {
 
     private final MessageDtoToEntityConverter converter;

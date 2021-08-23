@@ -13,6 +13,9 @@ import static br.com.guilhermealvessilve.communication.platform.infrastructure.c
 import static br.com.guilhermealvessilve.communication.platform.infrastructure.endpoint.exception.dto.ErrorsDto.withError;
 import static java.net.HttpURLConnection.*;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 public class ResponseComponent {
 
     private final JsonComponent jsonComponent;

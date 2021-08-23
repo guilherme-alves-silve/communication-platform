@@ -8,6 +8,9 @@ import io.vertx.sqlclient.PoolOptions;
 import io.vertx.sqlclient.SqlClient;
 import lombok.experimental.UtilityClass;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 @UtilityClass
 public class ConnectionPool {
 

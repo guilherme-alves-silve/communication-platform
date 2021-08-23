@@ -12,6 +12,9 @@ import lombok.NonNull;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 public final class FindScheduledMessageUseCase {
 
     private final MessageDtoToEntityConverter converter;

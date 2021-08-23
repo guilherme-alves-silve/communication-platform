@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 @Getter
 public class ErrorsDto {
 

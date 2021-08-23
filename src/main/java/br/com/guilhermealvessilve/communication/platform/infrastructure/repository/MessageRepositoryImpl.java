@@ -15,6 +15,9 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.*;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 public class MessageRepositoryImpl implements MessageRepository {
 
     private final SqlClient client;

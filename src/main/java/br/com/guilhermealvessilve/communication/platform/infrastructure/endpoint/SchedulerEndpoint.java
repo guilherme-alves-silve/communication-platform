@@ -25,6 +25,9 @@ import java.util.UUID;
 
 import static java.net.HttpURLConnection.*;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 @Log4j2
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class SchedulerEndpoint {

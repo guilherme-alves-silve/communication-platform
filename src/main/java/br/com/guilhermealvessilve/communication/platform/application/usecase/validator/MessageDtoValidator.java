@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
 
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 
+/**
+ * @author Guilherme Alves Silveira
+ */
 @Singleton
 public class MessageDtoValidator {
 
