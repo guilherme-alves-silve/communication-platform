@@ -17,3 +17,12 @@ services:
     restart: always
     ports:
       - 9090:8080
+
+  keycloak:
+    image: jboss/keycloak:15.0.1
+    environment:
+      DB_VENDOR: h2
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+    ports:
+        - 9080:8080
